@@ -1,82 +1,84 @@
-import 'dart:ui';
-
 import 'package:cabin/widget/adaptive.dart';
-import 'package:fluid_layout/fluid_layout.dart';
-
-import 'cabin_nav_bar.dart';
+import 'package:cabin/widget/cabin_nav_bar.dart';
 import 'package:flutter/material.dart';
 
-class CabinScaffold extends StatefulWidget {
+class CabinScaffold extends StatelessWidget {
   final CabinNavBar navBar;
   final Widget banner;
   final Widget body;
   final Widget side;
+  final Widget extendedBody;
   final bool adaptivePage;
+  bool hasSide = false;
+  bool hasBanner = false;
+  bool isExtended = false;
   CabinScaffold({
     @required this.navBar,
     this.banner,
     this.side,
     @required this.body,
     this.adaptivePage = true,
-  });
-  createState() => CabinScaffoldState();
-}
-
-class CabinScaffoldState extends State<CabinScaffold> {
-  double _screenWidth;
-  double _screenHeight;
-
-  bool hasSide = false;
-  bool hasBanner = false;
-  @override
-  void initState() {
-    hasSide = widget.side != null;
-    hasBanner = widget.banner != null;
-    super.initState();
+    this.extendedBody,
+  }) {
+    hasSide = side != null;
+    hasBanner = banner != null;
+    isExtended = extendedBody != null;
   }
-
   @override
   Widget build(BuildContext context) {
-    _screenWidth = MediaQuery.of(context).size.width;
-    _screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         backgroundColor: Colors.grey[200],
         body: Stack(
           children: [
-            (!hasSide) ? sidelessLayout() : sidefulLayout(),
-            widget.navBar,
+            (!hasSide) ? sidelessLayout(context) : sidefulLayout(context),
+            navBar,
           ],
         ));
   }
 
-  Widget sidelessLayout() {
+  Widget sidelessLayout(BuildContext context) {
     return ListView(
+      shrinkWrap: true,
       children: [
-        hasBanner ? widget.banner : Container(),
+        if (hasBanner) banner,
         Container(
-          child: widget.adaptivePage
-              ? AdaptivePageFrame(
-                  child: widget.body,
+          child: adaptivePage
+              ? Padding(
+                  padding: context.adaptivePagePadding,
+                  child: body,
                 )
-              : widget.body,
+              : body,
         ),
+        if (isExtended) extendedBody,
       ],
     );
   }
 
-  Widget sidefulLayout() {
-    return ListView(children: [
-      hasBanner ? widget.banner : Container(),
+  Widget sidefulLayout(BuildContext context) {
+    return ListView(shrinkWrap: true, children: [
+      hasBanner ? banner : Container(height: 50),
       Padding(
-          padding: EdgeInsets.all(10),
-          child: context.adaptiveMode.isSmallerThanL
-              ? Row(
-                  children: [widget.body, widget.side],
-                )
-              : Column(children: [
-                  widget.body,
-                  widget.side,
-                ])),
+          padding: adaptivePage
+              ? EdgeInsets.symmetric(horizontal: 10)
+              : context.adaptivePagePadding,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                context.adaptiveMode.isLargerThanM
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                            Expanded(child: body, flex: 6),
+                            Expanded(child: side, flex: 4),
+                          ])
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [body, side]),
+                if (isExtended) extendedBody,
+              ])),
     ]);
   }
 }

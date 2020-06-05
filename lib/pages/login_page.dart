@@ -1,6 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cabin/base/error.dart';
-import 'package:cabin/base/provider.dart';
+import 'package:cabin/base/user.dart';
 import 'package:cabin/widget/adaptive.dart';
 import 'package:cabin/widget/cabin_card.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +56,8 @@ class LoginPageState extends State<LoginPage> {
                         style: TextStyle(fontSize: 20),
                       ),
                       TextField(
-                        decoration: InputDecoration(hintText: "输入手机号/邮箱"),
+                        decoration: InputDecoration(hintText: "输入手机号"),
+                        keyboardType: TextInputType.phone,
                         controller: idCtrl,
                       ),
                       TextField(
@@ -100,11 +101,13 @@ class LoginPageState extends State<LoginPage> {
 
   Future tryLogin(BuildContext context) async {
     // print("am i ever here");
-    LoginInfoProvider provider = LoginInfoProvider();
-    bool result = false;
+    UserProvider provider = UserProvider.instance;
+    bool result = true;
     try {
-      result = await provider.login(idCtrl.text, pwCtrl.text);
+      await provider.login(idCtrl.text, pwCtrl.text);
     } on CabinError catch (e) {
+      result = false;
+      debugPrint(e.toString());
       BotToast.showNotification(
         leading: (func) => Icon(
           Icons.error,

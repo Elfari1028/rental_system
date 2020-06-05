@@ -1,5 +1,4 @@
-import 'package:cabin/base/provider.dart';
-import 'package:cabin/pages/home_page.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -7,8 +6,8 @@ Future<int> duringSplash() async {
   Map param = Map();
   int userType = 0;
   try {
-    param["id"] = await LocalData.obtainValue("id");
-    param["password"] = await LocalData.obtainValue("password");
+    // param["id"] = await LocalData.obtainValue("id");
+    // param["password"] = await LocalData.obtainValue("password");
     //TODO: LOGIN
     //TODO: OBTAIN RETURN PACKAGE
     //TODO: OBTAIN userType;
@@ -74,6 +73,6 @@ class _AnimatedSplashState extends State<AnimatedSplash>
   Future task() async {
     int value = await duringSplash();
     await Future.delayed(Duration(milliseconds: 2000));
-    Navigator.of(context).pushNamed(widget.outputAndHome[value]);
+    Navigator.pushNamed(context,widget.outputAndHome[value]);
   }
 }

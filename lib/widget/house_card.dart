@@ -8,24 +8,13 @@ class CabinHouseCard extends StatelessWidget {
 
   CabinHouseCard({@required this.house});
 
-  static double adaptiveRatio(double maxExtent, BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    EdgeInsets padding = context.adaptivePagePadding;
-    double padWidth = padding.left * 2;
-    double availWidth = width - padWidth;
-    int itemCount = (availWidth / maxExtent).ceil();
-    double itemWidth = availWidth / itemCount;
-    double k = (285 - maxExtent * 0.968) / (237 - maxExtent);
-    double itemHeight = (k) * itemWidth + maxExtent * 0.968 - maxExtent * k;
-    // debugPrint("i:$itemCount aw:$availWidth h:$itemHeight w:$itemWidth");
-
-    return itemWidth / itemHeight;
-  }
-
   @override
   Widget build(BuildContext context) {
     return CabinCard(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).pushNamed("/HouseDetail", arguments: this.house);
+      },
+      borderRadius: BorderRadius.circular(15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -34,7 +23,9 @@ class CabinHouseCard extends StatelessWidget {
             aspectRatio: 4 / 3.0,
             child: house == null
                 ? Container(color: Colors.grey)
-                : Container(child: house.cover),
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: house.cover),
           ),
           Container(
             padding: EdgeInsets.only(top: 10),
@@ -58,11 +49,11 @@ class CabinHouseCard extends StatelessWidget {
       );
     else
       return Text(
-        house.capType +
+        house.capacity.title +
             "·￥" +
             house.priceInYuan.toString() +
-            "每晚·" +
-            house.rentType,
+            house.term.adv +
+            house.term.title,
         style: TextStyle(color: Colors.brown, fontSize: 15),
       );
   }
@@ -108,8 +99,9 @@ class CabinHouseGridView extends StatelessWidget {
     });
     return GridView(
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 475,
-        childAspectRatio: CabinHouseCard.adaptiveRatio(475, (context)),
+        maxCrossAxisExtent: 520,
+        childAspectRatio: context.adaptiveRatio(
+            maxWidth: 520, maxHeight: 500, minHeight: 300),
       ),
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),

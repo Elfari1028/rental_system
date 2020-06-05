@@ -1,6 +1,6 @@
 import 'package:cabin/base/house.dart';
+import 'package:cabin/base/picture.dart';
 import 'package:cabin/base/tasker.dart';
-import 'package:cabin/base/user.dart';
 import 'package:cabin/widget/cabin_nav_bar.dart';
 import 'package:cabin/widget/cabin_scaffold.dart';
 import 'package:cabin/widget/cabin_search_bar.dart';
@@ -62,10 +62,12 @@ class ExplorePageState extends State<ExplorePage> {
 class _Tasker extends Tasker {
   Map _status = <String, bool>{"houselist": false};
   Map _data = Map<String, dynamic>();
-
   _Tasker(onFinished) : super(onFinished: onFinished);
   Future task() async {
     await Future.delayed(Duration(seconds: 2));
+
+    PictureGroupProvider provider = PictureGroupProvider.instance;
+    provider.test();
     _data["houselist"] = await HouseProvider.getDemoRecom();
     _status["houselist"] = true;
   }

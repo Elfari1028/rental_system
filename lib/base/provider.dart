@@ -1,75 +1,66 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:core';
 
 import 'package:cabin/base/error.dart';
+import 'package:dio/adapter_browser.dart';
+import 'package:dio/browser_imp.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences_web/shared_preferences_web.dart';
-
-class LocalData {
-  static SharedPreferencesPlugin _spPlugin = SharedPreferencesPlugin();
-  static SharedPreferencesPlugin get instance => _spPlugin;
-  static dynamic obtainValue(String key) async {
-    Map map = await _spPlugin.getAll();
-    if (map.containsKey(key) == false)
-      throw FrontError("LocalData", "OV_KEY_NULL");
-    return map[key];
-  }
-
-  static Future<bool> containsKey(String key) async =>
-      (await _spPlugin.getAll()).containsKey(key);
-
-  static Future savePair(String key, dynamic value) async {
-    String valueName;
-    switch (value.runtimeType) {
-      case int:
-        valueName = "Int";
-        break;
-      case double:
-        valueName = "Double";
-        break;
-      case bool:
-        valueName = "Bool";
-        break;
-      case String:
-        valueName = "String";
-        break;
-      case List:
-        if (value is List<String>) valueName = "List<String>";
-        break;
-      default:
-        throw FrontError("LocalData", "", "savePair(): Unsupported Type");
-    }
-    await _spPlugin.setValue(valueName, key, value);
-  }
-}
+// import 'package:http/http.dart' as http;
 
 class IOClient {
-  Dio dio;
+  DioForBrowser dio;
+  // var client = http.Client();
+  // String base = 'http://127.0.0.1:8000/';
   IOClient() {
-    dio = new Dio();
-    dio.options.baseUrl = 'http://www.qq.com'; //TODO: put url;
-    dio.options.connectTimeout = 5000;
-    dio.options.receiveTimeout = 3000;
+    BaseOptions options = BaseOptions(
+        // baseUrl: 'http://39.97.104.62:8990/', //TODO: put url;
+        baseUrl: 'http://back.cabin.com:8000/',
+        connectTimeout: 5000,
+        receiveTimeout: 3000,
+        extra: {'withCredentials': true, 'credentials': true});
+    dio = new DioForBrowser(options);
+    var adapter = BrowserHttpClientAdapter();
+    adapter.withCredentials = true;
+    dio.httpClientAdapter = adapter;
   }
 
   Future<Map> communicateWith(
-      {Map param, String target, String actionName, String method}) async {
+      {dynamic param, String target, String actionName, String method}) async {
+    // http.Response response;
     Response response;
     assert(method == "POST" || method == "GET");
-    debugPrint("arrival");
+
     try {
       if (method == "POST")
-        response = await dio.post(target, data: param);
+        response = await dio.post(target,
+            data: param,
+            options:
+                Options(extra: {'withCredentials': true, 'credentials': true}));
+      // response = (await http.post(base + target, body: json.encode(param)));
       else if (method == "GET")
-        response = await dio.get(target);
+        response = await dio.get(target,
+            options:
+                Options(extra: {'withCredentials': true, 'credentials': true}));
+      // response = (await http.get(base + target));
       else
         throw FrontError("IOClient", "METHOD NOT SUPPORTED");
     } on DioError catch (e) {
-      throw BackError("IOClient", "DIO_ERROR", e.message);
+      if (response != null)
+        debugPrint(e.request.toString() +
+            e.response.toString() +
+            e.response.statusCode.toString());
+      else
+        debugPrint(e.toString());
+      throw BackError(
+        "IOClient",
+        "DIO_ERROR",
+      );
     }
     if (response.statusCode == 200) {
       Map responseMap = response.data;
+      // Map responseMap = json.decode(response.body);
       if (responseMap.containsKey("success")) {
         if (responseMap["success"] is bool) {
           if (responseMap["success"] == true) {
@@ -77,7 +68,10 @@ class IOClient {
           } else {
             if (responseMap.containsKey("exc")) {
               if (responseMap["exc"] is String)
-                throw BackError("IOClient", responseMap["exc"]);
+                throw BackError(
+                  "IOClient",
+                  responseMap["exc"],
+                );
               else
                 throw FrontError("IOClient", "EXC_TYPE_ERR");
             } else
@@ -92,49 +86,4 @@ class IOClient {
       throw FrontError("IOClient", "HTTP_ERR_$code");
     }
   }
-}
-
-class LoginInfoProvider extends IOClient {
-  Future<bool> login(String id, String password) async {
-    debugPrint("here");
-    Map map = new Map();
-    map["id"] = id;
-    map["password"] = password;
-    Map response = await communicateWith(
-        param: map, target: "/login/", actionName: "Login", method: "POST");
-    if (response.containsKey("id") && response["id"] is String) {
-      String temp = response["id"];
-      if (temp.length == 0)
-        throw FrontError("LoginInfoProvider", "PARAM_LENGTH_0");
-      else
-        LocalData.savePair("currentID", response["id"]);
-    } else
-      throw FrontError("LoginInfoProvider", "PARAM_NULL");
-
-    if (response.containsKey("name") && response["name"] is String) {
-      String temp = response["name"];
-      if (temp.length == 0)
-        throw FrontError("LoginInfoProvider", "PARAM_LENGTH_0");
-      else
-        LocalData.savePair("currentName", response["name"]);
-    } else
-      throw FrontError("LoginInfoProvider", "PARAM_NULL");
-
-    if (response.containsKey("avatar") && response["avatar"] is String) {
-      String temp = response["avatar"];
-      if (temp.length == 0)
-        throw FrontError("LoginInfoProvider", "PARAM_LENGTH_0");
-      else
-        LocalData.savePair("currentAvatar", response["avatar"]);
-    } else
-      throw FrontError("LoginInfoProvider", "PARAM_NULL");
-
-    LocalData.savePair("currentPW", map["password"]);
-    return true;
-  }
-
-  Future<dynamic> register(String name,String phone, String email, String password,
-      int userType, int sex, int age) async {}
-
-  Future<dynamic> passwordReset(String id, String password) async {}
 }

@@ -1,8 +1,5 @@
-import 'dart:html';
-
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cabin/base/error.dart';
-import 'package:cabin/base/provider.dart';
 import 'package:cabin/base/user.dart';
 import 'package:cabin/widget/adaptive.dart';
 import 'package:cabin/widget/cabin_card.dart';
@@ -200,7 +197,7 @@ class RegisterPageState extends State<RegisterPage> {
                                   BorderSide(color: Colors.red, width: 1)),
                         ),
                         onChanged: (value) {
-                          if (value.contains("^[0-9]")) {
+                          if (value.contains(RegExp(r'[^0-9]'))) {
                             errorMap["age"] = "不得包含字符！";
                             errorMap["ageE"] = true;
                           } else if (value.length < 1 || value.length > 3) {
@@ -264,18 +261,20 @@ class RegisterPageState extends State<RegisterPage> {
 
   Future tryRegister(BuildContext context) async {
     // print("am i ever here");
-    LoginInfoProvider provider = LoginInfoProvider();
-    bool result = false;
+    UserProvider provider = UserProvider.instance;
+    bool result = true;
     try {
-      result = await provider.register(
-          nameCtrl.text,
-          telCtrl.text,
-          emailCtrl.text,
-          pwCtrl.text,
-          1,
-          sexCtrl.value,
-          int.parse(ageCtrl.text));
+      User user = User(
+        
+          name: nameCtrl.text,
+          password: pwCtrl.text,
+          phone: telCtrl.text,
+          email: emailCtrl.text,
+          sex: UserSexHelper.fromInt(sexCtrl.value));
+      await provider.register(nameCtrl.text, telCtrl.text, emailCtrl.text,
+          pwCtrl.text, 1, sexCtrl.value, int.parse(ageCtrl.text));
     } on CabinError catch (e) {
+      result = false;
       BotToast.showNotification(
         leading: (func) => Icon(
           Icons.error,
@@ -291,9 +290,23 @@ class RegisterPageState extends State<RegisterPage> {
         ),
       );
     }
-    if (result)
+    if (result) {
+      BotToast.showNotification(
+        leading: (func) => Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+        title: (func) => Text(
+          "注册成功",
+          style: TextStyle(fontSize: 25),
+        ),
+        subtitle: (func) => Text(
+          "请登录。",
+          style: TextStyle(fontSize: 15, color: Colors.grey),
+        ),
+      );
       Navigator.of(context).pop();
-    else {
+    } else {
       isRegistering = false;
       setState(() {});
     }

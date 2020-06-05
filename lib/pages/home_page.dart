@@ -1,10 +1,8 @@
 import 'package:cabin/base/house.dart';
 import 'package:cabin/base/tasker.dart';
-import 'package:cabin/widget/adaptive.dart';
 import 'package:cabin/widget/cabin_nav_bar.dart';
 import 'package:cabin/widget/cabin_scaffold.dart';
 import 'package:cabin/widget/house_card.dart';
-import 'package:fluid_layout/fluid_layout.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,7 +19,8 @@ class HomePageState extends State<HomePage> {
     super.initState();
     tasker = _Tasker(() {
       if (!mounted) return;
-      setState(() {});
+      setState(() {
+      });
     });
     tasker.start();
   }
@@ -32,7 +31,10 @@ class HomePageState extends State<HomePage> {
     _screenHeight = MediaQuery.of(context).size.height;
     // tasker.start();
     return CabinScaffold(
-        navBar: CabinNavBar(), banner: header(), side: null, body: body());
+        navBar: CabinNavBar(autoLeading: false),
+        banner: header(),
+        side: null,
+        body: body());
   }
 
   Widget header() {
@@ -60,7 +62,7 @@ class HomePageState extends State<HomePage> {
                         border: InputBorder.none,
                         suffix: RaisedButton(
                           onPressed: () {
-                            Navigator.of(context).pushNamed("/explore");
+                            Navigator.pushNamed(context, "/explore");
                           },
                           color: Colors.brown,
                           splashColor: Colors.white,
@@ -113,7 +115,6 @@ class _Tasker extends Tasker {
   Future<void> task() async {
     _data["houselist"] = await HouseProvider.getDemoRecom();
     _status["houselist"] = true;
-    // debugPrint("task done");
   }
 
   List<House> get recommendations {

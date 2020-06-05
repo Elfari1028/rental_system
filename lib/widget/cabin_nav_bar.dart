@@ -1,14 +1,16 @@
 import 'dart:ui';
 
 import 'package:cabin/base/error.dart';
-import 'package:cabin/base/provider.dart';
 import 'package:cabin/base/tasker.dart';
 import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
 // import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cabin/base/user.dart';
 
 class CabinNavBar extends StatefulWidget implements PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(50.0);
+  bool autoLeading;
+  CabinNavBar({this.autoLeading = true});
   createState() => CabinNavBarState();
 }
 
@@ -17,65 +19,94 @@ class CabinNavBarState extends State<CabinNavBar> {
   double _screenHeight;
   _Tasker tasker;
 
+  bool useCloseButton;
+
   @override
   void initState() {
     tasker = _Tasker(() {
-      setState(() {});
+      if (!mounted) return;
+      setState(() {
+        debugPrint("setState!");
+      });
     });
     super.initState();
+    tasker.start();
   }
 
   @override
   Widget build(BuildContext context) {
     _screenWidth = MediaQuery.of(context).size.width;
     _screenHeight = MediaQuery.of(context).size.height;
-    tasker.start();
     return Container(
-      width: _screenWidth,
-      height: 50,
-      color: Colors.transparent,
-      child: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
-          child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(),
-                  Container(
-                    child: Image.asset(
-                      "images/title.png",
-                    ),
-                  ),
-                  accountSpace(),
-                ],
-              )),
-        ),
-      ),
-    );
+        width: _screenWidth,
+        height: 50,
+        color: Colors.transparent,
+        child: ClipRect(
+            child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
+                child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          if (widget.autoLeading != false && leading() != null)
+                            leading()
+                          else
+                            Container(width: 50, height: 50),
+                          Align(
+                              alignment: Alignment.center,
+                              child: FlatButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .popUntil(ModalRoute.withName('/home'));
+                                  },
+                                  child: Image.asset("images/title.png"))),
+                          accountSpace(),
+                        ])))));
+  }
+
+  Widget leading() {
+    final ModalRoute<dynamic> parentRoute = ModalRoute.of(context);
+    useCloseButton =
+        parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
+    if (Navigator.of(context).canPop())
+      return useCloseButton ? const CloseButton() : const BackButton();
+    else
+      return null;
   }
 
   Widget accountSpace() {
     if (tasker.loginStatus == false)
       return RaisedButton(
           onPressed: () async {
-            await Navigator.of(context).pushReplacementNamed('/login');
-            setState(() {            
-            });
+            await Navigator.pushNamed(context, '/login');
+            if (!mounted) return;
+            setState(() {});
           },
           child: Text("登录"));
     else
-      return Container(
-        child: Row(
-          children: [
-            Text("个人中心", style: TextStyle(color: Colors.black)),
-            Container(
-              child: IconButton(icon: Icon(Icons.person), onPressed: () {}),
-            )
-          ],
-        ),
-      );
+      return FlatButton(
+          onPressed: () {
+            Navigator.pushNamed(context, "/PersonalHome");
+          },
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: Text("个人中心", style: TextStyle(color: Colors.black))),
+                Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(boxShadow: [
+                      BoxShadow(
+                          color: Colors.black38, spreadRadius: 1, blurRadius: 5)
+                    ], borderRadius: BorderRadius.circular(20)),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: tasker.avatar))
+              ]));
   }
 }
 
@@ -87,77 +118,59 @@ class _Tasker extends Tasker {
   /// => if login fail, roll back to `false`;
   /// => if login success, set both to `true`;
 
-  Map<String, bool> _status = <String, bool>{
-    "avatar": false,
-    "name": false,
-    "weather": false,
-    "tryLogin": false,
-    "login": false,
-  };
-
   _Tasker(onFinished) : super(onFinished: onFinished);
+
+  UserProvider provider = UserProvider.instance;
 
   @override
   Future<void> task() async {
-    await accountTask().whenComplete(() => onFinished);
+    await accountTask();
   }
 
   Future accountTask() async {
-    bool accountExist = await LocalData.containsKey("currentID");
-    if (!accountExist) return;
-    _status["tryLogin"] = true;
-    LoginInfoProvider provider = LoginInfoProvider();
+    bool error = false;
     try {
-      provider.login(await LocalData.obtainValue("currentID"),
-          await LocalData.obtainValue("currentPW"));
+      bool result = await provider.tryGetMyInfo();
     } on CabinError catch (e) {
-      _status["tryLogin"] = false;
-      if (e.className == "LocalData" && e.code == "OV_KEY_NULL") {
-        // do nothing
-      } else {
-        BotToast.showNotification(
-          leading: (func) => Icon(
-            Icons.error,
-            color: Colors.red,
-          ),
-          title: (func) => Text(
-            "登陆失败",
-            style: TextStyle(fontSize: 25),
-          ),
-          subtitle: (func) => Text(
-            e.toString(),
-            style: TextStyle(fontSize: 15, color: Colors.grey),
-          ),
-        );
-      }
+      error = true;
+      BotToast.showNotification(
+        leading: (_) => Icon(Icons.cancel, color: Colors.red),
+        title: (_) => Text("通信错误，请重新打开网站。"),
+        subtitle: (_) => Text(e.toString()),
+      );
     }
-    if (_status["tryLogin"] == false) return;
-    _status["login"] = true;
-    _data["name"] = await LocalData.obtainValue("currentName");
-    _data["avatar"] = await LocalData.obtainValue("currentAvatar");
+    if (error) cancelOrder = true;
   }
 
   Widget get avatar {
-    if (_status["tryLogin"] == true || _status["avatar"] == true) {
-      if (_status["login"] == true && _status["avatar"] == true) {
-        if (_data["avatar"] == "none")
-          return Image.asset("images/avatar_default.jpg");
-        else
-          return _data["avatar"];
-      } else
-        return CircularProgressIndicator();
+    if ((UserProvider.currentUser) != null) {
+      if (UserProvider.currentUser.avatar == "none") {
+        debugPrint("none");
+        return Image.asset(
+          "images/avatar_default.jpg",
+          fit: BoxFit.cover,
+        );
+      }
+      return Image.network(
+        ((UserProvider.currentUser)).avatar,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, chunk) => chunk == null
+            ? child
+            : Container(
+                width: 50, height: 50, child: CircularProgressIndicator()),
+      );
     } else
       return CircularProgressIndicator();
   }
 
   String get name {
-    if (_status[name] == true)
-      return _data[name];
+    if (loginStatus == true)
+      return (UserProvider.currentUser).name;
     else
       return "正在加载";
   }
 
   bool get loginStatus {
-    return _status["tryLogin"];
+    return UserProvider.loginStatus;
   }
 }

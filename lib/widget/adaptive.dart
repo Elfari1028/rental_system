@@ -42,15 +42,15 @@ extension Adaptive on BuildContext {
     double width = MediaQuery.of(this).size.width;
     switch (this.adaptiveMode) {
       case AdaptiveMode.xs:
-        return EdgeInsets.symmetric(horizontal: width * 0.025);
+        return EdgeInsets.symmetric(horizontal: width * 0.025, vertical: 50);
       case AdaptiveMode.s:
-        return EdgeInsets.symmetric(horizontal: width * 0.05);
+        return EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 50);
       case AdaptiveMode.m:
-        return EdgeInsets.symmetric(horizontal: width * 0.1);
+        return EdgeInsets.symmetric(horizontal: width * 0.1, vertical: 50);
       case AdaptiveMode.l:
-        return EdgeInsets.symmetric(horizontal: width * 0.1);
+        return EdgeInsets.symmetric(horizontal: width * 0.1, vertical: 50);
       case AdaptiveMode.xl:
-        return EdgeInsets.symmetric(horizontal: width * 0.2);
+        return EdgeInsets.symmetric(horizontal: width * 0.2, vertical: 50);
     }
     return EdgeInsets.zero;
   }
@@ -58,6 +58,22 @@ extension Adaptive on BuildContext {
   AdaptiveMode get adaptiveMode {
     double width = MediaQuery.of(this).size.width;
     return AdaptiveHelper.from(width: width);
+  }
+
+  double adaptiveRatio(
+      {@required double maxHeight,
+      @required double maxWidth,
+      @required double minHeight}) {
+    double width = MediaQuery.of(this).size.width;
+    EdgeInsets padding = this.adaptivePagePadding;
+    double padWidth = padding.left * 2;
+    double availWidth = width - padWidth;
+    int itemCount = (availWidth / maxWidth).ceil();
+    double itemWidth = availWidth / itemCount;
+    double minWidth = maxWidth / 2;
+    double k = (minHeight - maxHeight) / (minWidth - maxWidth); //285 237 0.968
+    double itemHeight = (k) * itemWidth + maxHeight - maxWidth * k;
+    return itemWidth / itemHeight;
   }
 }
 
