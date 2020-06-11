@@ -52,7 +52,9 @@ class CabinNavBarState extends State<CabinNavBar> {
                           if (widget.autoLeading != false && leading() != null)
                             leading()
                           else
-                            Container(width: 50, height: 50),
+                            Container(
+                              width: 50,
+                            ),
                           Align(
                               alignment: Alignment.center,
                               child: FlatButton(
@@ -85,28 +87,22 @@ class CabinNavBarState extends State<CabinNavBar> {
           },
           child: Text("登录"));
     else
-      return FlatButton(
-          onPressed: () {
-            Navigator.pushNamed(context, "/PersonalHome");
-          },
-          child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                    padding: EdgeInsets.only(right: 20),
-                    child: Text("个人中心", style: TextStyle(color: Colors.black))),
-                Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(boxShadow: [
-                      BoxShadow(
-                          color: Colors.black38, spreadRadius: 1, blurRadius: 5)
-                    ], borderRadius: BorderRadius.circular(20)),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: tasker.avatar))
-              ]));
+      return Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(boxShadow: [
+            BoxShadow(color: Colors.black38, spreadRadius: 1, blurRadius: 5)
+          ], borderRadius: BorderRadius.circular(20)),
+          child: FlatButton(
+            padding: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              onPressed: () {
+                Navigator.pushNamed(context, "/PersonalHome");
+              },
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: tasker.avatar)));
   }
 }
 

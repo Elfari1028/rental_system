@@ -61,7 +61,7 @@ class PersonalCenterPageState extends State<PersonalCenterPage> {
                           border: Border.all(color: Colors.black, width: 1))),
                   FlatButton(
                       onPressed: () async {
-                        await Navigator.of(context).pushNamed('/account/edit');
+                        Navigator.of(context).pushNamed('/account/edit',arguments:{'user':UserProvider.currentUser,'isAdmin':false} );
                         // setState(() {});
                       },
                       child: Text("编辑资料")),
@@ -125,16 +125,22 @@ class PersonalCenterPageState extends State<PersonalCenterPage> {
     List<Widget> ret = List<Widget>();
     switch (UserProvider.currentUser.type) {
       case UserType.service:
-        ret.add(actionCard("订单管理", Icons.payment, () {}));
+        ret.add(actionCard("订单管理", Icons.payment, () {
+          Navigator.of(context).pushNamed('/order/all');}));
         ret.add(actionCard("工单管理", Icons.feedback, () {}));
-        ret.add(actionCard("房源管理", Icons.home, () {}));
-        ret.add(actionCard("用户管理", Icons.contacts, () {}));
+        ret.add(actionCard("房源管理", Icons.home, () {
+          Navigator.of(context).pushNamed('/house/all');
+        }));
+        ret.add(actionCard("用户管理", Icons.contacts, () {
+          Navigator.of(context).pushNamed('/account/all');
+        }));
         break;
       case UserType.maintenance:
         ret.add(actionCard("工单管理", Icons.feedback, () {}));
         break;
       case UserType.rentee:
-        ret.add(actionCard("订单管理", Icons.payment, () {}));
+        ret.add(actionCard("订单管理", Icons.payment,() {
+          Navigator.of(context).pushNamed('/order/mine');}));
         ret.add(actionCard("投诉报修", Icons.feedback, () {}));
     }
     return ret;

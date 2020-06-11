@@ -67,7 +67,6 @@ class _Tasker extends Tasker {
     await Future.delayed(Duration(seconds: 2));
 
     PictureGroupProvider provider = PictureGroupProvider.instance;
-    provider.test();
     _data["houselist"] = await HouseProvider.getDemoRecom();
     _status["houselist"] = true;
   }

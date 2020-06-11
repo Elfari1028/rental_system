@@ -1,9 +1,11 @@
 import 'dart:typed_data';
 
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cabin/base/error.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'provider.dart';
+import 'package:cabin/base/ioclient.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:universal_html/html.dart' as html;
@@ -13,23 +15,37 @@ class Picture {
   html.File file;
   Uint8List imageBytes;
   String imageName;
+  Picture();
+  bool isFromLink = false;
+  Picture.fromLink(String link){
+    isFromLink = true;
+    image = Image.network(link,fit:BoxFit.cover, loadingBuilder:(_,child,chunk) => chunk == null? child:SizedBox(height: 50,width: 50,child: CircularProgressIndicator(),),);
+  }
 }
 
 class PictureGroupProvider extends IOClient {
   static PictureGroupProvider _instance = PictureGroupProvider();
   static PictureGroupProvider get instance => _instance;
 
-  Future<String> uploadAvatar(Picture avatar) async {
-    FormData formData = FormData.fromMap({
-      "avatar":
-          MultipartFile.fromBytes(avatar.imageBytes, filename: avatar.imageName)
-    });
-    Map response = await communicateWith(
-        method: "POST",
-        actionName: "UPLOAD PICTURE",
-        target: "/account/avatar/",
-        param: formData);
-    return response["data"];
+  Future<String> uploadAvatar(int id, Picture avatar) async {
+    Map response;
+    try {
+      FormData formData = FormData.fromMap({
+        "id": id,
+        "avatar": MultipartFile.fromBytes(avatar.imageBytes,
+            filename: avatar.imageName)
+      });
+      response = await communicateWith(
+          method: "POST",
+          actionName: "UPLOAD PICTURE",
+          target: "/account/avatar/",
+          param: formData);
+    } on FrontError catch (e) {
+      BotToast.showSimpleNotification(title: "上传头像失败", subTitle: e.msg);
+    }
+    if(response != null)
+      return IOClient.baseUrl+response["data"];
+    else return null;
   }
 
   Future<int> upload(List<Picture> pictures) async {
@@ -68,7 +84,7 @@ class PictureGroupProvider extends IOClient {
         method: "POST",
         actionName: "UPLOAD PICTURE",
         target: "/picgroup/remove/",
-        param: {"pgid": pgid, "id": pid,"len":len});
+        param: {"pgid": pgid, "id": pid, "len": len});
   }
 
   Future delete(int pgid) async {

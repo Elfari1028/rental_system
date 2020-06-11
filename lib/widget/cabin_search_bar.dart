@@ -61,22 +61,13 @@ class CabinSearchBarState extends State<CabinSearchBar> {
               itemBuilder: (builder) => <PopupMenuEntry<int>>[
                 PopupMenuItem<int>(
                     value: 1,
-                    child: Text(
-                      "单人间",
-                      style: TextStyle(fontSize: 20),
-                    )),
+                    child: Text("单人间", style: TextStyle(fontSize: 20))),
                 PopupMenuItem<int>(
                     value: 2,
-                    child: Text(
-                      "双人间",
-                      style: TextStyle(fontSize: 20),
-                    )),
+                    child: Text("双人间", style: TextStyle(fontSize: 20))),
                 PopupMenuItem<int>(
                     value: 4,
-                    child: Text(
-                      "四人间",
-                      style: TextStyle(fontSize: 20),
-                    )),
+                    child: Text("四人间", style: TextStyle(fontSize: 20))),
               ],
               child: Container(
                 decoration: BoxDecoration(

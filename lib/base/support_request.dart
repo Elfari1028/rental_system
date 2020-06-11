@@ -1,8 +1,14 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cabin/base/cabin_model.dart';
+import 'package:cabin/base/error.dart';
 import 'package:cabin/base/house.dart';
+import 'package:cabin/base/order.dart';
+import 'package:cabin/base/picture.dart';
 import 'package:cabin/base/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:cabin/base/ioclient.dart';
+part 'support_request_provider.dart';
 
 enum RequestStatus {
   pending,
@@ -68,11 +74,43 @@ class SupportRequest extends CabinModel {
   RequestType type;
   String content;
   DateTime createTime;
+  int pictureGroupID;
   List<String> imagePaths;
-  House house;
+  Order order;
   User rentee;
   User maintenance;
   User respondant;
+  
+  SupportRequest.fromMap(Map map){
+    this.id = map["id"];
+    this.status = RequestStatusHelper.fromInt(map['status']);
+    this.type = RequestTypeHelper.fromInt(map['type']);
+    this.content = map['content'];
+    this.pictureGroupID = map['pgid'];
+    this.imagePaths = map['paths'];
+    this.createTime = DateTime.parse(map['create']);
+    this.order = Order.fromMap(map['order']);
+    this.rentee = User.fromMap(map['rentee']);
+    this.maintenance = map['maintenance'] == null?User.create(-1):User.fromMap(map['maintenance']);
+    this.respondant = map['respondant'] == null?User.create(-1):User.fromMap(map['respondant']);
+  }
+
+  Map toCreateMap() => {
+    'uid':rentee.id,
+    'order': order.id,
+    'content':content,
+    'type':type.value,
+    'status': 1,
+    'pgid':pictureGroupID,
+  };
+
+  SupportRequest.create(User user,Order order,String content,RequestType type){
+    status = RequestStatus.pending;
+    this.type = type;
+    this.content = content;
+    this.rentee = user;
+    this.order = order;
+  }
 
   static final List<String> fieldNames = [
     "ID",
@@ -100,7 +138,7 @@ class SupportRequest extends CabinModel {
     fieldNames[5]: (SupportRequest a, SupportRequest b) =>
         a.imagePaths.length - b.imagePaths.length,
     fieldNames[6]: (SupportRequest a, SupportRequest b) =>
-        a.house.id.compareTo(b.house.id),
+        a.order.id.compareTo(b.order.id),
     fieldNames[7]: (SupportRequest a, SupportRequest b) =>
         a.rentee.id - b.rentee.id,
     fieldNames[8]: (SupportRequest a, SupportRequest b) =>
@@ -120,15 +158,17 @@ class SupportRequest extends CabinModel {
 
   @override
   Map<String, Widget> getWidgets() => {
-        fieldNames[0]: Text(this.id.toString()),
-        fieldNames[1]: Text(this.status.title),
-        fieldNames[2]: Text(this.type.title),
-        fieldNames[3]: Text(this.content,overflow: TextOverflow.ellipsis,),
-        fieldNames[4]: Text(this.createTime.toString()),
-        fieldNames[5]: Image.network(this.imagePaths.first),
-        fieldNames[6]: this.house.cover,
-        fieldNames[7]: this.rentee.avatarImage,
-        fieldNames[8]: this.maintenance == null?Text("无"):this.maintenance.avatarImage,
-        fieldNames[9]: this.respondant == null?Text("无"):this.respondant.avatarImage,
+        // fieldNames[0]: Text(this.id.toString()),
+        // fieldNames[1]: Text(this.status.title),
+        // fieldNames[2]: Text(this.type.title),
+        // fieldNames[3]: Text(this.content,overflow: TextOverflow.ellipsis,),
+        // fieldNames[4]: Text(this.createTime.toString()),
+        // fieldNames[5]: Image.network(this.imagePaths.first),
+        // fieldNames[6]: this.order..cover,
+        // fieldNames[7]: this.rentee.avatarImage,
+        // fieldNames[8]: this.maintenance == null?Text("无"):this.maintenance.avatarImage,
+        // fieldNames[9]: this.respondant == null?Text("无"):this.respondant.avatarImage,
       };
+
+  
 }

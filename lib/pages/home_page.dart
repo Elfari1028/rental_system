@@ -113,7 +113,7 @@ class _Tasker extends Tasker {
 
   _Tasker(VoidCallback onFinished) : super(onFinished: onFinished);
   Future<void> task() async {
-    _data["houselist"] = await HouseProvider.getDemoRecom();
+    _data["houselist"] = await HouseProvider.instance.getAllHouses();
     _status["houselist"] = true;
   }
 

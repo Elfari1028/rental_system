@@ -12,7 +12,10 @@ class CabinHouseCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CabinCard(
       onPressed: () {
-        Navigator.of(context).pushNamed("/HouseDetail", arguments: this.house);
+        print(house.toMap());
+        Navigator.of(context)
+            .pushNamed("/HouseDetail", arguments: {'house': this.house});
+        // .pushNamed('/house/edit',arguments:{'house':this.house});
       },
       borderRadius: BorderRadius.circular(15),
       child: Column(
@@ -21,11 +24,8 @@ class CabinHouseCard extends StatelessWidget {
         children: [
           AspectRatio(
             aspectRatio: 4 / 3.0,
-            child: house == null
-                ? Container(color: Colors.grey)
-                : ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: house.cover),
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(15), child: house.cover),
           ),
           Container(
             padding: EdgeInsets.only(top: 10),
@@ -42,37 +42,26 @@ class CabinHouseCard extends StatelessWidget {
   }
 
   Text infoText() {
-    if (house == null)
-      return Text(
-        "---" + "·￥" + "---" + "·" + "---",
-        style: TextStyle(color: Colors.brown, fontSize: 15),
-      );
-    else
-      return Text(
-        house.capacity.title +
-            "·￥" +
-            house.priceInYuan.toString() +
-            house.term.adv +
-            house.term.title,
-        style: TextStyle(color: Colors.brown, fontSize: 15),
-      );
+    return Text(
+      house.capacity.title +
+          "·￥" +
+          house.priceInYuan.toString() +
+          house.term.adv +
+          "·" +
+          house.term.title,
+      style: TextStyle(color: Colors.brown, fontSize: 15),
+    );
   }
 
   Text title() {
-    if (house == null)
-      return Text(
-        "加载中",
-        style: TextStyle(color: Colors.black, fontSize: 19),
-      );
-    else
-      return Text(
-        house.title,
-        softWrap: true,
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 20,
-        ),
-      );
+    return Text(
+      house.title,
+      softWrap: true,
+      style: TextStyle(
+        color: Colors.black,
+        fontSize: 20,
+      ),
+    );
   }
 }
 

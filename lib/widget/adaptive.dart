@@ -40,6 +40,7 @@ extension AdaptiveHelper on AdaptiveMode {
 extension Adaptive on BuildContext {
   EdgeInsets get adaptivePagePadding {
     double width = MediaQuery.of(this).size.width;
+    print("width:"+width.toString());
     switch (this.adaptiveMode) {
       case AdaptiveMode.xs:
         return EdgeInsets.symmetric(horizontal: width * 0.025, vertical: 50);

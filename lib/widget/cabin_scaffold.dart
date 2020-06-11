@@ -59,8 +59,7 @@ class CabinScaffold extends StatelessWidget {
       hasBanner ? banner : Container(height: 50),
       Padding(
           padding: adaptivePage
-              ? EdgeInsets.symmetric(horizontal: 10)
-              : context.adaptivePagePadding,
+              ?  context.adaptivePagePadding:EdgeInsets.symmetric(horizontal: 10),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,16 +1,20 @@
-import 'dart:core';
 import 'dart:ui';
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cabin/base/house.dart';
+import 'package:cabin/base/order.dart';
+import 'package:cabin/base/user.dart';
 import 'package:cabin/widget/cabin_card.dart';
 import 'package:cabin/widget/cabin_nav_bar.dart';
 import 'package:cabin/widget/cabin_scaffold.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:markdown_widget/markdown_widget.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 
 class HousePage extends StatefulWidget {
+  House house;
+  HousePage(this.house);
   createState() => HousePageState();
 }
 
@@ -23,13 +27,13 @@ class HousePageState extends State<HousePage> {
   @override
   void initState() {
     super.initState();
+    house = widget.house;
     startDate = DateTime.now();
     endDate = startDate.add(Duration(days: 1));
   }
 
   @override
   Widget build(BuildContext context) {
-    house = ModalRoute.of(context).settings.arguments as House;
     if (house == null) {
       BotToast.showNotification(
           leading: (_) => Icon(Icons.error_outline, color: Colors.red),
@@ -42,6 +46,7 @@ class HousePageState extends State<HousePage> {
         ? Center(child: CircularProgressIndicator())
         : CabinScaffold(
             navBar: CabinNavBar(),
+            adaptivePage: true,
             banner: carousel(),
             body: body(),
             side: side(),
@@ -64,12 +69,12 @@ class HousePageState extends State<HousePage> {
               child: CarouselSlider(
                   items: imageCards(),
                   options: CarouselOptions(
-                    // height: 600,
-                    aspectRatio: 16 / 5,
+                    height: 600,
+                    aspectRatio: 16 / 9,
                     autoPlay: true,
                     initialPage: 0,
-                    viewportFraction: 0.6,
-                    autoPlayInterval: Duration(seconds: 3),
+                    viewportFraction: 0.5,
+                    autoPlayInterval: Duration(seconds:5),
                     autoPlayAnimationDuration: Duration(milliseconds: 800),
                     autoPlayCurve: Curves.fastOutSlowIn,
                     enlargeCenterPage: true,
@@ -83,27 +88,23 @@ class HousePageState extends State<HousePage> {
       ));
   List<Widget> imageCards() {
     List<Widget> ret = List<Widget>();
-    ret.add(CabinCard(
-      // height: 600,
-      // width: 50,
-      borderRadius: BorderRadius.circular(15),
-      child: house.images[0],
-      onPressed: () {},
-      elevation: 7.0,
-      hoverElevation: 10.0,
-      padding: EdgeInsets.zero,
-    ));
-    for (int i = 1; i < house.images.length; i++) {
-      ret.add(CabinCard(
-        // height: 600,
-        // width: 50,
-        borderRadius: BorderRadius.circular(15),
-        child: house.images[i],
-        onPressed: () {},
-        elevation: 7.0,
-        hoverElevation: 10.0,
-        padding: EdgeInsets.zero,
-      ));
+    for (int i = 0; i < house.images.length; i++) {
+      ret.add(FittedBox(fit:BoxFit.cover,child:Container(
+          // height: 600,
+          padding: EdgeInsets.all(50),
+          child:ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: RaisedButton(
+            onPressed: (){},
+            color: Colors.transparent,
+            hoverColor: Colors.white10,
+            highlightColor: Colors.black12,
+            elevation: 7.0,
+            hoverElevation: 10.0,
+            padding: EdgeInsets.zero,
+            child:  house.images[i],
+            )),
+          )));
     }
     return ret;
   }
@@ -138,7 +139,9 @@ class HousePageState extends State<HousePage> {
               child: Align(
                   alignment: Alignment.centerRight,
                   child: RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      placeOrder();
+                    },
                     child: Text(
                       "提交申请",
                       style: TextStyle(fontSize: 15, color: Colors.white),
@@ -239,4 +242,50 @@ class HousePageState extends State<HousePage> {
           child: Text("入住" + endCount.toString() + "个月"),
         )
       ]));
+
+  void placeOrder() async {
+    if(UserProvider.currentUser == null){
+      BotToast.showSimpleNotification(title: "请先登录");
+      return;
+    }
+    bool result = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => SimpleDialog(title: Text("下单"), children: [
+              SimpleDialogOption(
+                  child: Text("确定"),
+                  onPressed: () {
+                    Navigator.of(ctx).pop(true);
+                  }),
+              SimpleDialogOption(
+                  child: Text("取消"),
+                  onPressed: () {
+                    Navigator.of(ctx).pop(false);
+                  }),
+            ]));
+    if (result == false) return;
+    final ProgressDialog pr =
+        ProgressDialog(context, isDismissible: false, showLogs: true);
+    await pr.show();
+    print("SHOW");
+    OrderType orderType = OrderTypeHelper.fromInt(widget.house.term.value);
+    DateTime end = orderType.isShort
+        ? endDate
+        : endDate.add(Duration(days: endCount * 30));
+    int amount =
+        orderType.isShort ? endDate.difference(startDate).inDays : endCount;
+    amount = house.price * amount;
+    Order order = Order.create(startDate, end, UserProvider.currentUser.id,
+        widget.house.id, orderType, amount);
+    result = await OrderProvider.instance.create(order);
+    if (result) {
+      BotToast.showSimpleNotification(title: "创建成功");
+      if (orderType.isShort) {
+        //TODO: ADD PAYMENT
+      } else {
+        //TODO: ADD PRINT
+      }
+    } else
+      BotToast.showSimpleNotification(title: "创建失败");
+    pr.hide();
+  }
 }

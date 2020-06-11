@@ -55,6 +55,7 @@ class CabinCard extends StatelessWidget {
               color: Colors.transparent,
               hoverColor: hoverColor,
               highlightColor: highlightColor,
+              textColor: Colors.black,
               focusColor: Colors.white,
               disabledColor: Colors.white,
               hoverElevation: hoverElevation,

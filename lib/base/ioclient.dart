@@ -12,7 +12,7 @@ import 'package:flutter/foundation.dart';
 class IOClient {
   DioForBrowser dio;
   // var client = http.Client();
-  // String base = 'http://127.0.0.1:8000/';
+  static String baseUrl = 'http://back.cabin.com:8000';
   IOClient() {
     BaseOptions options = BaseOptions(
         // baseUrl: 'http://39.97.104.62:8990/', //TODO: put url;

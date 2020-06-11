@@ -5,9 +5,6 @@ import 'package:cabin/widget/adaptive.dart';
 import 'package:cabin/widget/cabin_card.dart';
 import 'package:flutter/material.dart';
 
-final String regexEmail =
-    r'^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$';
-final String regexPw = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$';
 
 class RegisterPage extends StatefulWidget {
   createState() => RegisterPageState();
@@ -72,7 +69,6 @@ class RegisterPageState extends State<RegisterPage> {
                         style: TextStyle(fontSize: 20),
                       ),
                       TextField(
-                        keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
                           hintText: "输入昵称（可修改）",
                           errorText:
@@ -265,14 +261,12 @@ class RegisterPageState extends State<RegisterPage> {
     bool result = true;
     try {
       User user = User(
-        
           name: nameCtrl.text,
           password: pwCtrl.text,
           phone: telCtrl.text,
           email: emailCtrl.text,
-          sex: UserSexHelper.fromInt(sexCtrl.value));
-      await provider.register(nameCtrl.text, telCtrl.text, emailCtrl.text,
-          pwCtrl.text, 1, sexCtrl.value, int.parse(ageCtrl.text));
+          sex: UserSexHelper.fromInt(sexCtrl.value),type: UserType.rentee,intro:"简介为空",age: int.parse(ageCtrl.text),avatar: "none");
+      await provider.register(user);
     } on CabinError catch (e) {
       result = false;
       BotToast.showNotification(

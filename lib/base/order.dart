@@ -1,9 +1,16 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cabin/base/cabin_model.dart';
+import 'package:cabin/base/error.dart';
 import 'package:cabin/base/house.dart';
 import 'package:cabin/base/user.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:cabin/base/ioclient.dart';
+part 'order_provider.dart';
+
+extension CabinDT on DateTime{
+  String toMyString()=>this.toString().substring(0,19);
+}
 
 enum OrderStatus {
   submitted,
@@ -74,10 +81,21 @@ extension OrderStatusHelper on OrderStatus {
   }
 }
 
+enum OrderType { short, long }
+
+extension OrderTypeHelper on OrderType {
+  int get value => this == OrderType.short ? 0 : 1;
+  static OrderType fromInt(int i) =>
+      i == 0 ? OrderType.short : i == 1 ? OrderType.long : null;
+  String get title => this == OrderType.short ? "短租" : "长租";
+  String get adv => this == OrderType.short ? "每晚" : "每月";
+  bool get isShort => this.value == 0;
+}
+
 class Order extends CabinModel {
   int id;
   OrderStatus status;
-  int type;
+  OrderType type;
   int amount;
   DateTime createTime;
   DateTime startTime;
@@ -86,6 +104,26 @@ class Order extends CabinModel {
   House house;
   User respondant;
 
+  Map toCommMap() => {
+        'id': id,
+        'status': status.value,
+        'type': type.value,
+        'amount': amount,
+        'start': (startTime.toIso8601String()),
+        'end': endTime.toIso8601String(),
+        'uid': rentee.phone,
+        'hid': house.id,
+        'rid': respondant==null?null:respondant.id,
+      };
+    Map toCreateMap() => {
+        'type': type.value,
+        'status':status.value,
+        'amount': amount,
+        'start': (startTime.toIso8601String()),
+        'end': endTime.toIso8601String(),
+        'uid': rentee.id,
+        'hid': house.id,
+      };
   Map toMap() => {
         'id': id,
         'status': status,
@@ -94,10 +132,10 @@ class Order extends CabinModel {
         'time': createTime,
         'start': startTime,
         'end': endTime,
-        'uid': rentee.id,
-        'hid': house.id,
+        'uid': rentee,
+        'hid': house,
+        'res': respondant,
       };
-
   Order({
     @required this.id,
     @required this.status,
@@ -110,18 +148,29 @@ class Order extends CabinModel {
     @required this.rentee,
     @required this.respondant,
   });
-
+  Order.create(DateTime startTime,DateTime endTime,int uid,int hid,OrderType type,int amount){
+    this.startTime = startTime;
+    this.endTime = endTime;
+    this.rentee = User.create(UserProvider.currentUser.id);
+    this.rentee.id = uid;
+    this.house = House.create();
+    this.house.id = hid;
+    this.type = type;
+    this.amount = amount;
+    this.status = this.type.isShort?
+      OrderStatus.submitted:OrderStatus.pendingReview;
+  }
   Order.fromMap(Map<String, dynamic> map) {
     this.id = map["id"];
-    this.status = map["status"];
-    this.type = map["type"];
+    this.status = OrderStatusHelper.fromInt(map["status"]);
+    this.type = OrderTypeHelper.fromInt(map["type"]);
     this.amount = map["amount"];
-    this.createTime = map["create"];
-    this.startTime = map["start"];
-    this.endTime = map["end"];
+    this.createTime = DateTime.parse(map["create"]);
+    this.startTime = DateTime.parse(map["start"]);
+    this.endTime = DateTime.parse(map["end"]);
     this.house = House.fromMap(map["house"]);
     this.rentee = User.fromMap(map["rentee"]);
-    this.respondant = User.fromMap(map["respondant"]);
+    this.respondant = map["respondant"] == null?User.create(-1):User.fromMap(map["respondant"]);
   }
 
   static final List<String> fieldNames = [
@@ -141,17 +190,17 @@ class Order extends CabinModel {
   List<String> getFieldNames() =>
       fieldNames.skipWhile((value) => value == "ID");
 
-  static final Map<String, Comparator<Order>> comparators = {
-    fieldNames[0]: (Order a, Order b) => a.id - b.id,
-    fieldNames[1]: (Order a, Order b) => a.status.value - b.status.value,
-    fieldNames[2]: (Order a, Order b) => a.type - b.type,
-    fieldNames[3]: (Order a, Order b) => a.amount - b.amount,
-    fieldNames[4]: (Order a, Order b) => a.createTime.compareTo(b.createTime),
-    fieldNames[5]: (Order a, Order b) => a.startTime.compareTo(b.createTime),
-    fieldNames[6]: (Order a, Order b) => a.endTime.compareTo(b.endTime),
-    fieldNames[7]: (Order a, Order b) => a.house.id.compareTo(b.house.id),
-    fieldNames[8]: (Order a, Order b) => a.rentee.id - b.rentee.id,
-    fieldNames[9]: (Order a, Order b) => a.respondant.id - b.respondant.id,
+  static final Map<String, Comparator<CabinModel>> comparators = {
+    fieldNames[0]: (CabinModel a, CabinModel b) => (a as Order).id - (b as Order).id,
+    fieldNames[1]: (CabinModel a, CabinModel b) => (a as Order).status.value - (b as Order).status.value,
+    fieldNames[2]: (CabinModel a, CabinModel b) => (a as Order).type.value - (b as Order).type.value,
+    fieldNames[3]: (CabinModel a, CabinModel b) => (a as Order).amount - (b as Order).amount,
+    fieldNames[4]: (CabinModel a, CabinModel b) => (a as Order).createTime.compareTo((b as Order).createTime),
+    fieldNames[5]: (CabinModel a, CabinModel b) => (a as Order).startTime.compareTo((b as Order).createTime),
+    fieldNames[6]: (CabinModel a, CabinModel b) => (a as Order).endTime.compareTo((b as Order).endTime),
+    fieldNames[7]: (CabinModel a, CabinModel b) => (a as Order).house.id.compareTo((b as Order).house.id),
+    fieldNames[8]: (CabinModel a, CabinModel b) => (a as Order).rentee.id - (b as Order).rentee.id,
+    fieldNames[9]: (CabinModel a, CabinModel b) => (a as Order).respondant.id - (b as Order).respondant.id,
   };
   Map<String, Comparator<CabinModel>> getComparators() => comparators;
 

@@ -38,18 +38,7 @@ class LoginPageState extends State<LoginPage> {
                     children: [
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Container(
-                            width: 50,
-                            height: 50,
-                            child: FlatButton(
-                                shape: CircleBorder(),
-                                child: Icon(
-                                  Icons.arrow_back,
-                                  size: 20,
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                })),
+                        child:BackButton()
                       ),
                       Text(
                         "登录",
