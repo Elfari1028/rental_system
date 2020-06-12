@@ -32,7 +32,7 @@ class PictureGroupProvider extends IOClient {
     try {
       FormData formData = FormData.fromMap({
         "id": id,
-        "avatar": MultipartFile.fromBytes(avatar.imageBytes,
+        "avatar":MultipartFile.fromBytes(avatar.imageBytes,
             filename: avatar.imageName)
       });
       response = await communicateWith(

@@ -127,7 +127,8 @@ class PersonalCenterPageState extends State<PersonalCenterPage> {
       case UserType.service:
         ret.add(actionCard("订单管理", Icons.payment, () {
           Navigator.of(context).pushNamed('/order/all');}));
-        ret.add(actionCard("工单管理", Icons.feedback, () {}));
+        ret.add(actionCard("工单管理", Icons.feedback, () {
+          Navigator.of(context).pushNamed('/support/all');}));
         ret.add(actionCard("房源管理", Icons.home, () {
           Navigator.of(context).pushNamed('/house/all');
         }));

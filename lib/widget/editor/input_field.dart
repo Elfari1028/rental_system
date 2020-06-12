@@ -37,6 +37,8 @@ class CabinInputField extends StatefulWidget {
     this.controller ??= CabinInputFieldController();
     this.keyboardType ??= TextInputType.multiline;
     this.title = this.title + "  ";
+    if(this.obscure == true)
+      this.maxLines =1;
   }
   createState() => CabinInputFieldState();
 }

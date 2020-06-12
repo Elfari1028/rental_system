@@ -9,6 +9,7 @@ class CabinScaffold extends StatelessWidget {
   final Widget side;
   final Widget extendedBody;
   final bool adaptivePage;
+  int bodyRatio;
   bool hasSide = false;
   bool hasBanner = false;
   bool isExtended = false;
@@ -16,6 +17,7 @@ class CabinScaffold extends StatelessWidget {
     @required this.navBar,
     this.banner,
     this.side,
+    this.bodyRatio = 6,
     @required this.body,
     this.adaptivePage = true,
     this.extendedBody,
@@ -27,17 +29,18 @@ class CabinScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: navBar,
         backgroundColor: Colors.grey[200],
         body: Stack(
           children: [
             (!hasSide) ? sidelessLayout(context) : sidefulLayout(context),
-            navBar,
           ],
         ));
   }
 
   Widget sidelessLayout(BuildContext context) {
     return ListView(
+      physics:ClampingScrollPhysics(),
       shrinkWrap: true,
       children: [
         if (hasBanner) banner,
@@ -55,7 +58,9 @@ class CabinScaffold extends StatelessWidget {
   }
 
   Widget sidefulLayout(BuildContext context) {
-    return ListView(shrinkWrap: true, children: [
+    return ListView(
+      physics:ClampingScrollPhysics(),
+      shrinkWrap: true, children: [
       hasBanner ? banner : Container(height: 50),
       Padding(
           padding: adaptivePage
@@ -67,10 +72,10 @@ class CabinScaffold extends StatelessWidget {
                 context.adaptiveMode.isLargerThanM
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                            Expanded(child: body, flex: 6),
-                            Expanded(child: side, flex: 4),
+                            Expanded(child: body, flex: bodyRatio),
+                            Expanded(child: side, flex: 10-bodyRatio),
                           ])
                     : Column(
                         mainAxisAlignment: MainAxisAlignment.center,

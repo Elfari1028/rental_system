@@ -1,0 +1,74 @@
+Date : 2020-06-12 20:20:01
+Directory : d:\Projects\rental_system\lib
+Total : 44 files,  5128 codes, 86 comments, 403 blanks, all 5617 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Dart     |         44 |      5,128 |         86 |        403 |      5,617 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                    | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                       |         44 |      5,128 |         86 |        403 |      5,617 |
+| base                                                                    |         14 |      1,492 |         43 |        143 |      1,678 |
+| pages                                                                   |         13 |      1,542 |         27 |        110 |      1,679 |
+| pages\admin                                                             |          4 |        164 |          0 |         24 |        188 |
+| pages\rentee                                                            |          1 |         42 |          0 |          6 |         48 |
+| widget                                                                  |         15 |      1,942 |         14 |        141 |      2,097 |
+| widget\editor                                                           |          7 |        962 |          8 |         61 |      1,031 |
++-------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                | language | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| d:\Projects\rental_system\lib\base\cabin_model.dart                     | Dart     |          8 |          0 |          3 |         11 |
+| d:\Projects\rental_system\lib\base\error.dart                           | Dart     |         21 |          1 |          3 |         25 |
+| d:\Projects\rental_system\lib\base\house.dart                           | Dart     |        242 |          0 |         23 |        265 |
+| d:\Projects\rental_system\lib\base\house_provider.dart                  | Dart     |        128 |          2 |         11 |        141 |
+| d:\Projects\rental_system\lib\base\ioclient.dart                        | Dart     |         78 |          7 |          5 |         90 |
+| d:\Projects\rental_system\lib\base\local_data.dart                      | Dart     |          0 |          0 |          1 |          1 |
+| d:\Projects\rental_system\lib\base\order.dart                           | Dart     |        210 |          0 |         14 |        224 |
+| d:\Projects\rental_system\lib\base\order_provider.dart                  | Dart     |         61 |          0 |          5 |         66 |
+| d:\Projects\rental_system\lib\base\picture.dart                         | Dart     |         94 |         23 |          9 |        126 |
+| d:\Projects\rental_system\lib\base\support_request.dart                 | Dart     |        238 |         10 |         24 |        272 |
+| d:\Projects\rental_system\lib\base\support_request_provider.dart        | Dart     |         87 |          0 |          7 |         94 |
+| d:\Projects\rental_system\lib\base\tasker.dart                          | Dart     |         19 |          0 |          5 |         24 |
+| d:\Projects\rental_system\lib\base\user.dart                            | Dart     |        222 |          0 |         24 |        246 |
+| d:\Projects\rental_system\lib\base\user_provider.dart                   | Dart     |         84 |          0 |          9 |         93 |
+| d:\Projects\rental_system\lib\main.dart                                 | Dart     |        122 |          2 |          6 |        130 |
+| d:\Projects\rental_system\lib\pages\admin\house_list.dart               | Dart     |         41 |          0 |          6 |         47 |
+| d:\Projects\rental_system\lib\pages\admin\order_list.dart               | Dart     |         41 |          0 |          6 |         47 |
+| d:\Projects\rental_system\lib\pages\admin\request_list.dart             | Dart     |         42 |          0 |          6 |         48 |
+| d:\Projects\rental_system\lib\pages\admin\user_list.dart                | Dart     |         40 |          0 |          6 |         46 |
+| d:\Projects\rental_system\lib\pages\explore_page.dart                   | Dart     |         69 |          0 |          8 |         77 |
+| d:\Projects\rental_system\lib\pages\home_page.dart                      | Dart     |        115 |          2 |         12 |        129 |
+| d:\Projects\rental_system\lib\pages\house_page.dart                     | Dart     |        279 |          4 |         10 |        293 |
+| d:\Projects\rental_system\lib\pages\login_page.dart                     | Dart     |        116 |          1 |          6 |        123 |
+| d:\Projects\rental_system\lib\pages\personal_center_page.dart           | Dart     |        174 |          1 |         10 |        185 |
+| d:\Projects\rental_system\lib\pages\register_page.dart                  | Dart     |        300 |          1 |          8 |        309 |
+| d:\Projects\rental_system\lib\pages\rentee\order_list.dart              | Dart     |         42 |          0 |          6 |         48 |
+| d:\Projects\rental_system\lib\pages\splash_page.dart                    | Dart     |         42 |         17 |         13 |         72 |
+| d:\Projects\rental_system\lib\pages\support_page.dart                   | Dart     |        241 |          1 |         13 |        255 |
+| d:\Projects\rental_system\lib\routes.dart                               | Dart     |         30 |          0 |          3 |         33 |
+| d:\Projects\rental_system\lib\widget\adaptive.dart                      | Dart     |         82 |          0 |         10 |         92 |
+| d:\Projects\rental_system\lib\widget\cabin_card.dart                    | Dart     |         69 |          0 |          3 |         72 |
+| d:\Projects\rental_system\lib\widget\cabin_data_table.dart              | Dart     |        299 |          0 |         27 |        326 |
+| d:\Projects\rental_system\lib\widget\cabin_nav_bar.dart                 | Dart     |        150 |          5 |         18 |        173 |
+| d:\Projects\rental_system\lib\widget\cabin_scaffold.dart                | Dart     |         80 |          0 |          4 |         84 |
+| d:\Projects\rental_system\lib\widget\cabin_search_bar.dart              | Dart     |        157 |          0 |          8 |        165 |
+| d:\Projects\rental_system\lib\widget\display_util.dart                  | Dart     |         51 |          0 |          2 |         53 |
+| d:\Projects\rental_system\lib\widget\editor\avatar_field.dart           | Dart     |         42 |          0 |          7 |         49 |
+| d:\Projects\rental_system\lib\widget\editor\custom_radio.dart           | Dart     |        217 |          4 |         16 |        237 |
+| d:\Projects\rental_system\lib\widget\editor\house_editor.dart           | Dart     |        193 |          0 |          9 |        202 |
+| d:\Projects\rental_system\lib\widget\editor\input_field.dart            | Dart     |         76 |          4 |          6 |         86 |
+| d:\Projects\rental_system\lib\widget\editor\photo_uploader.dart         | Dart     |         64 |          0 |          5 |         69 |
+| d:\Projects\rental_system\lib\widget\editor\support_request_editor.dart | Dart     |        175 |          0 |         10 |        185 |
+| d:\Projects\rental_system\lib\widget\editor\user_editor.dart            | Dart     |        195 |          0 |          8 |        203 |
+| d:\Projects\rental_system\lib\widget\house_card.dart                    | Dart     |         92 |          1 |          8 |        101 |
+| Total                                                                   |          |      5,128 |         86 |        403 |      5,617 |
++-------------------------------------------------------------------------+----------+------------+------------+------------+------------+

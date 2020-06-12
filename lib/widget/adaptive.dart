@@ -43,15 +43,15 @@ extension Adaptive on BuildContext {
     print("width:"+width.toString());
     switch (this.adaptiveMode) {
       case AdaptiveMode.xs:
-        return EdgeInsets.symmetric(horizontal: width * 0.025, vertical: 50);
+        return EdgeInsets.symmetric(horizontal: width * 0.025, vertical: 0);
       case AdaptiveMode.s:
-        return EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 50);
+        return EdgeInsets.symmetric(horizontal: width * 0.05, vertical: 0);
       case AdaptiveMode.m:
-        return EdgeInsets.symmetric(horizontal: width * 0.1, vertical: 50);
+        return EdgeInsets.symmetric(horizontal: width * 0.1, vertical: 0);
       case AdaptiveMode.l:
-        return EdgeInsets.symmetric(horizontal: width * 0.1, vertical: 50);
+        return EdgeInsets.symmetric(horizontal: width * 0.1, vertical: 0);
       case AdaptiveMode.xl:
-        return EdgeInsets.symmetric(horizontal: width * 0.2, vertical: 50);
+        return EdgeInsets.symmetric(horizontal: width * 0.2, vertical: 0);
     }
     return EdgeInsets.zero;
   }

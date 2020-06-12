@@ -82,7 +82,9 @@ class HousePageState extends State<HousePage> {
                   )))));
   Widget body() => Container(
       width: 600,
+      padding: EdgeInsets.all(10),
       child: MarkdownWidget(
+        physics: NeverScrollableScrollPhysics(),
         data: house.intro,
         shrinkWrap: true,
       ));

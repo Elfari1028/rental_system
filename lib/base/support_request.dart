@@ -15,6 +15,7 @@ enum RequestStatus {
   ongoing,
   dispatched,
   closed,
+  rated,
 }
 
 extension RequestStatusHelper on RequestStatus {
@@ -27,6 +28,8 @@ extension RequestStatusHelper on RequestStatus {
       case RequestStatus.dispatched:
         return 3;
       case RequestStatus.closed:
+        return 4;
+      case RequestStatus.rated:
         return 4;
     }
   }
@@ -41,6 +44,8 @@ extension RequestStatusHelper on RequestStatus {
         return "已安排维修";
       case RequestStatus.closed:
         return "已关闭";
+      case RequestStatus.rated:
+        return "已评价";
     }
   }
 
@@ -80,31 +85,39 @@ class SupportRequest extends CabinModel {
   User rentee;
   User maintenance;
   User respondant;
-  
-  SupportRequest.fromMap(Map map){
+
+  SupportRequest.fromMap(Map map) {
     this.id = map["id"];
     this.status = RequestStatusHelper.fromInt(map['status']);
     this.type = RequestTypeHelper.fromInt(map['type']);
     this.content = map['content'];
     this.pictureGroupID = map['pgid'];
-    this.imagePaths = map['paths'];
+    List images = (map["images"] as List);
+    this.imagePaths = new List<String>();
+    for (int i = 0; i < images.length; i++)
+      this.imagePaths.add(IOClient.baseUrl + (images[i] as String));
     this.createTime = DateTime.parse(map['create']);
     this.order = Order.fromMap(map['order']);
     this.rentee = User.fromMap(map['rentee']);
-    this.maintenance = map['maintenance'] == null?User.create(-1):User.fromMap(map['maintenance']);
-    this.respondant = map['respondant'] == null?User.create(-1):User.fromMap(map['respondant']);
+    this.maintenance = map['maintenance'] == null
+        ? User.create(-1)
+        : User.fromMap(map['maintenance']);
+    this.respondant = map['respondant'] == null
+        ? User.create(-1)
+        : User.fromMap(map['respondant']);
   }
 
   Map toCreateMap() => {
-    'uid':rentee.id,
-    'order': order.id,
-    'content':content,
-    'type':type.value,
-    'status': 1,
-    'pgid':pictureGroupID,
-  };
+        'uid': rentee.id,
+        'order': order.id,
+        'content': content,
+        'type': type.value,
+        'status': 1,
+        'pgid': pictureGroupID,
+      };
 
-  SupportRequest.create(User user,Order order,String content,RequestType type){
+  SupportRequest.create(
+      User user, Order order, String content, RequestType type) {
     status = RequestStatus.pending;
     this.type = type;
     this.content = content;
@@ -119,32 +132,44 @@ class SupportRequest extends CabinModel {
     "内容",
     "创建时间",
     "图片",
+    "订单",
     "房屋",
     "租客",
     "维修工人",
     "责任客服",
   ];
 
-  static final Map<String, Comparator<SupportRequest>> comparators = {
-    fieldNames[0]: (SupportRequest a, SupportRequest b) => a.id - b.id,
-    fieldNames[1]: (SupportRequest a, SupportRequest b) =>
-        a.status.value - b.status.value,
-    fieldNames[2]: (SupportRequest a, SupportRequest b) =>
-        a.type.value - b.type.value,
-    fieldNames[3]: (SupportRequest a, SupportRequest b) =>
-        a.content.length - b.content.length,
-    fieldNames[4]: (SupportRequest a, SupportRequest b) =>
-        a.createTime.compareTo(b.createTime),
-    fieldNames[5]: (SupportRequest a, SupportRequest b) =>
-        a.imagePaths.length - b.imagePaths.length,
-    fieldNames[6]: (SupportRequest a, SupportRequest b) =>
-        a.order.id.compareTo(b.order.id),
-    fieldNames[7]: (SupportRequest a, SupportRequest b) =>
-        a.rentee.id - b.rentee.id,
-    fieldNames[8]: (SupportRequest a, SupportRequest b) =>
-        a.maintenance.id - b.maintenance.id,
-    fieldNames[9]: (SupportRequest a, SupportRequest b) =>
-        a.respondant.id - b.respondant.id,
+  static final Map<String, Comparator<CabinModel>> comparators = {
+    fieldNames[0]: (CabinModel a, CabinModel b) =>
+        (a as SupportRequest).id - (b as SupportRequest).id,
+    fieldNames[1]: (CabinModel a, CabinModel b) =>
+        (a as SupportRequest).status.value - (b as SupportRequest).status.value,
+    fieldNames[2]: (CabinModel a, CabinModel b) =>
+        (a as SupportRequest).type.value - (b as SupportRequest).type.value,
+    fieldNames[3]: (CabinModel a, CabinModel b) =>
+        (a as SupportRequest).content.length -
+        (b as SupportRequest).content.length,
+    fieldNames[4]: (CabinModel a, CabinModel b) => (a as SupportRequest)
+        .createTime
+        .compareTo((b as SupportRequest).createTime),
+    fieldNames[5]: (CabinModel a, CabinModel b) =>
+        (a as SupportRequest).imagePaths.length -
+        (b as SupportRequest).imagePaths.length,
+    fieldNames[6]: (CabinModel a, CabinModel b) => (a as SupportRequest)
+        .order
+        .id
+        .compareTo((b as SupportRequest).order.id),
+         fieldNames[7]: (CabinModel a, CabinModel b) => (a as SupportRequest)
+        .order.house.id
+        .compareTo((b as SupportRequest).order.house.id),
+    fieldNames[8]: (CabinModel a, CabinModel b) =>
+        (a as SupportRequest).rentee.id - (b as SupportRequest).rentee.id,
+    fieldNames[9]: (CabinModel a, CabinModel b) =>
+        (a as SupportRequest).maintenance.id -
+        (b as SupportRequest).maintenance.id,
+    fieldNames[10]: (CabinModel a, CabinModel b) =>
+        (a as SupportRequest).respondant.id -
+        (b as SupportRequest).respondant.id,
   };
 
   @override
@@ -170,5 +195,77 @@ class SupportRequest extends CabinModel {
         // fieldNames[9]: this.respondant == null?Text("无"):this.respondant.avatarImage,
       };
 
-  
+  Image get cover {
+    return Image.network(imagePaths.first,
+        fit: BoxFit.cover,
+        loadingBuilder: (BuildContext context, Widget child,
+                ImageChunkEvent loadingProgress) =>
+            loadingProgress == null
+                ? child
+                : Center(
+                    child: Container(
+                        height: 50,
+                        width: 50,
+                        child: CircularProgressIndicator())));
+  }
+
+  List<Image> get images {
+    List<Image> images = List<Image>();
+    this.imagePaths.forEach((element) {
+      images.add(Image.network(element,
+          fit: BoxFit.cover,
+          loadingBuilder: (BuildContext context, Widget child,
+                  ImageChunkEvent loadingProgress) =>
+              loadingProgress != null
+                  ? Center(
+                      child: Container(
+                          height: 50,
+                          width: 50,
+                          child: CircularProgressIndicator()))
+                  : child));
+    });
+    return images;
+  }
+}
+
+class SupportRequestReply implements Comparable<SupportRequestReply> {
+  int id;
+  int srid;
+  User user;
+  DateTime time;
+  String content;
+  int pictureGroupID;
+  List<String> imagePaths;
+
+  Map toCreateMap() => {
+        "srid": srid,
+        "user": user.id,
+        "content": content,
+        "pgid": pictureGroupID,
+      };
+
+  @override
+  int compareTo(SupportRequestReply other) {
+    return this.time.compareTo(other.time);
+  }
+
+  SupportRequestReply.fromMap(Map map) {
+    this.id = map["id"];
+    this.srid = map["srid"];
+    this.user = User.fromMap(map["user"]);
+    this.pictureGroupID = map["pgid"] == null? -1:map["pgid"];
+    this.content = map["content"];
+    this.time = DateTime.parse(map['time']);
+    List images = (map["images"] as List);
+    this.imagePaths = new List<String>();
+    if(map["images"]!=null)
+    for (int i = 0; i < images.length; i++)
+      this.imagePaths.add(IOClient.baseUrl + (images[i] as String));
+  }
+
+  SupportRequestReply.create(int srid,User user, String content) {
+    this.srid = srid;
+    this.user =user;
+    this.content = content;
+  }
 }

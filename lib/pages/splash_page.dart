@@ -66,6 +66,6 @@ class _AnimatedSplashState extends State<AnimatedSplash>
   Future task() async {
     // int value = await duringSplash();
     await Future.delayed(Duration(milliseconds: 500));
-    Navigator.pushNamed(context,widget.outputAndHome[0]);
+    Navigator.pushReplacementNamed(context,widget.outputAndHome[0]);
   }
 }

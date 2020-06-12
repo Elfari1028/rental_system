@@ -1,8 +1,10 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cabin/pages/admin/house_list.dart';
 import 'package:cabin/pages/admin/order_list.dart';
+import 'package:cabin/pages/admin/request_list.dart';
 import 'package:cabin/pages/admin/user_list.dart';
 import 'package:cabin/pages/rentee/order_list.dart';
+import 'package:cabin/pages/support_page.dart';
 import 'package:cabin/widget/editor/house_editor.dart';
 import 'package:cabin/widget/editor/support_request_editor.dart';
 import 'package:cabin/widget/editor/user_editor.dart';
@@ -26,6 +28,7 @@ class Cabin extends StatelessWidget {
       title: 'Cabin!',
       theme: ThemeData(
           // buttonColor: Colors.brown,
+          primaryIconTheme: IconThemeData(color:Colors.black),
           iconTheme: IconThemeData(color: Colors.brown),
           buttonTheme: ButtonThemeData(
               padding: EdgeInsets.all(5),
@@ -38,7 +41,7 @@ class Cabin extends StatelessWidget {
                   surface: Colors.white,
                   background: Colors.transparent,
                   error: Colors.red,
-                  onPrimary: Colors.white,
+                  onPrimary: Colors.black,
                   onSecondary: Colors.white,
                   onSurface: Colors.black,
                   onBackground: Colors.white,
@@ -101,10 +104,18 @@ Route<dynamic> _getRoute(RouteSettings settings) {
     case '/order/mine':
       widget = RenteeOrderListPage();
       break;
+    case '/support/all':
+      widget = AdminSupportRequestListPage();
+      break;
     case '/support/create':
      Map arguments = settings.arguments as Map;
       widget = SupportRequestEditor(arguments["order"], arguments["init"]);
       break;
+    case '/support/conversation':
+     Map arguments = settings.arguments as Map;
+      widget = SupportConvoPage(arguments["request"]);
+      break;
+    
     default:
       return null;
   }

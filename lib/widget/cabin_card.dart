@@ -24,9 +24,9 @@ class CabinCard extends StatelessWidget {
     this.highlightColor = Colors.transparent,
     this.splashColor = Colors.white30,
     this.borderRadius = BorderRadius.zero,
-    this.hoverElevation = 7.0,
-    this.elevation = 0,
-    this.highlightElevation = 3.0,
+    this.hoverElevation = 10.0,
+    this.elevation = 3.0,
+    this.highlightElevation = 1.0,
     this.disabledElevation = 7.0,
     this.padding,
     this.border,
@@ -41,7 +41,7 @@ class CabinCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.fromLTRB(5, 5, 20, 20),
+        padding: EdgeInsets.fromLTRB(10, 10, 20, 20),
         child: Container(
             height: height,
             width: width,

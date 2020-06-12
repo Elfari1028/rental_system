@@ -92,7 +92,9 @@ class MaintenanceCabinDataTableState extends CabinDataTableState {
     List<Widget> ret = new List<Widget>();
     if (request.status != RequestStatus.closed) {
       ret.add(RaisedButton(
-          onPressed: () {}, color: Colors.green, child: Text("回复")));
+          onPressed: () {
+            Navigator.of(context).pushNamed('/support/converstaion',arguments: {"request":request});
+          }, color: Colors.green, child: Text("回复")));
     } else
       ret.add(RaisedButton(onPressed: () {}, child: Text("查看详情")));
     return Column(
@@ -140,10 +142,14 @@ class ServiceCabinDataTableState extends CabinDataTableState {
     if (request.status != RequestStatus.closed) {
       ret.add(RaisedButton(
           onPressed: () {}, color: Colors.red, child: Text("关闭工单")));
-      ret.add(RaisedButton(
-          onPressed: () {}, color: Colors.green, child: Text("回复")));
+     ret.add(RaisedButton(
+          onPressed: () {
+            Navigator.of(context).pushNamed('/support/conversation',arguments: {"request":request});
+          }, color: Colors.green, child: Text("回复")));
     } else
-      ret.add(RaisedButton(onPressed: () {}, child: Text("查看详情")));
+      ret.add(RaisedButton(onPressed: () {  
+        Navigator.of(context).pushNamed('/request/conversation',arguments: {'request':request});
+      }, child: Text("查看详情")));
     return Column(
       children: ret,
     );
@@ -155,7 +161,7 @@ class ServiceCabinDataTableState extends CabinDataTableState {
     ret.add(RaisedButton(
         onPressed: () async {
           await Navigator.of(context)
-              .pushNamed('/account/edit', arguments: {'user': user});
+              .pushNamed('/account/edit', arguments: {'user': user,'isAdmin':true});
         },
         child: Text("修改")));
     return Column(children: ret);
@@ -171,6 +177,7 @@ abstract class CabinDataTableState extends State<CabinDataTable> {
   List<String> fieldNames;
   int _sortColumnIndex;
   bool _sortAsc = true;
+  double itemWidth;
   @override
   void initState() {
     super.initState();
@@ -183,6 +190,7 @@ abstract class CabinDataTableState extends State<CabinDataTable> {
   Widget build(BuildContext context) {
     _screenWidth = MediaQuery.of(context).size.width;
     frameWidth = _screenWidth * 0.8 > 800 ? _screenWidth * 0.8 : 800;
+    itemWidth = frameWidth / (fieldNames.length + 1);
     return SingleChildScrollView(
         scrollDirection: Axis.horizontal, child: body());
   }
@@ -259,7 +267,27 @@ abstract class CabinDataTableState extends State<CabinDataTable> {
                 () {}),
           ]))
       .toList();
-
+  List<DataRow> get requestRows => items
+      .map((request) => DataRow(cells: [
+            wrapper(requestActions(request as SupportRequest), null),
+            wrapper(text((request as SupportRequest).id.toString()), () {}),
+            wrapper(text((request as SupportRequest).status.title), () {}),
+            wrapper(text((request as SupportRequest).type.title), () {}),
+            wrapper(text((request as SupportRequest).content), () {}),
+            wrapper(text((request as SupportRequest).createTime.toMyString()), () {}),
+            wrapper((request as SupportRequest).cover, () {}),
+            wrapper(
+                CabinDisplayUtil.miniOrderCard((request as SupportRequest).order), () {}),
+            wrapper(
+                CabinDisplayUtil.miniHouseCard((request as SupportRequest).order.house), () {}),
+            wrapper(
+                CabinDisplayUtil.miniUserCard((request as SupportRequest).rentee), () {}),
+            wrapper(
+                CabinDisplayUtil.miniUserCard((request as SupportRequest).maintenance), () {}),
+            wrapper(CabinDisplayUtil.miniUserCard((request as SupportRequest).respondant),
+                () {}),
+          ]))
+      .toList();
   List<DataRow> get houseRows => items
       .map((house) => DataRow(cells: [
             wrapper(houseActions(house as House), null),
@@ -280,6 +308,7 @@ abstract class CabinDataTableState extends State<CabinDataTable> {
       case User:
         return userRows;
       case SupportRequest:
+        return requestRows;
       case Order:
         return orderRows;
       case House:
@@ -292,5 +321,5 @@ abstract class CabinDataTableState extends State<CabinDataTable> {
       onTap: onTap);
 
   Widget text(String text) =>
-      Text(text, softWrap: true, overflow: TextOverflow.ellipsis);
+      Text(text, softWrap: true,overflow: TextOverflow.ellipsis);
 }

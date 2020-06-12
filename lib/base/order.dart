@@ -9,7 +9,9 @@ import 'package:cabin/base/ioclient.dart';
 part 'order_provider.dart';
 
 extension CabinDT on DateTime{
-  String toMyString()=>this.toString().substring(0,19);
+  String toMyString() { 
+    String ret = this.toString();
+    return this.toString().substring(0,ret.length<19?ret.length:19);}
 }
 
 enum OrderStatus {

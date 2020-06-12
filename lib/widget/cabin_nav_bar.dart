@@ -1,10 +1,8 @@
 import 'dart:ui';
-
 import 'package:cabin/base/error.dart';
 import 'package:cabin/base/tasker.dart';
 import 'package:flutter/material.dart';
 import 'package:bot_toast/bot_toast.dart';
-// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cabin/base/user.dart';
 
 class CabinNavBar extends StatefulWidget implements PreferredSizeWidget {
@@ -37,34 +35,33 @@ class CabinNavBarState extends State<CabinNavBar> {
   Widget build(BuildContext context) {
     _screenWidth = MediaQuery.of(context).size.width;
     _screenHeight = MediaQuery.of(context).size.height;
-    return Container(
-        width: _screenWidth,
-        height: 50,
-        color: Colors.transparent,
-        child: ClipRect(
-            child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
-                child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (widget.autoLeading != false && leading() != null)
-                            leading()
-                          else
-                            Container(
-                              width: 50,
-                            ),
-                          Align(
-                              alignment: Alignment.center,
-                              child: FlatButton(
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .popUntil(ModalRoute.withName('/home'));
-                                  },
-                                  child: Image.asset("images/title.png"))),
-                          accountSpace(),
-                        ])))));
+    return AppBar(
+      backgroundColor: Color.lerp(Colors.orange[800],Colors.brown,0.8),
+      automaticallyImplyLeading: false,
+      centerTitle: false,
+      title: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            if (widget.autoLeading != false && leading() != null)
+                              leading()
+                            else
+                              Container(
+                                width: 50,
+                              ),
+                            Align(
+                                alignment: Alignment.center,
+                                child: Container(height:50,child:FlatButton(
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .popUntil(ModalRoute.withName('/home'));
+                                    },
+                                    padding: EdgeInsets.all(5),
+                                    child: Image.asset("images/title.png",fit: BoxFit.cover,)))),
+                            accountSpace(),
+                          ]))
+    );
   }
 
   Widget leading() {
@@ -94,7 +91,7 @@ class CabinNavBarState extends State<CabinNavBar> {
             BoxShadow(color: Colors.black38, spreadRadius: 1, blurRadius: 5)
           ], borderRadius: BorderRadius.circular(20)),
           child: FlatButton(
-            padding: EdgeInsets.zero,
+              padding: EdgeInsets.zero,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
               onPressed: () {
