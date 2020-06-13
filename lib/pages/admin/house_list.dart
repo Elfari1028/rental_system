@@ -24,18 +24,23 @@ class AdminHouseListPageState extends State<AdminHouseListPage> {
     return CabinScaffold(
       navBar: CabinNavBar(),
       adaptivePage: false,
-      body: dataReady
+      body: Column(children:[
+        RaisedButton(child:Text("添加房源"),onPressed: ()async{
+         await Navigator.of(context).pushNamed('/house/create',arguments: {'house':null});
+          setState(() {});
+        },),
+        dataReady
           ? Container(
               alignment: Alignment.topCenter,
               padding: EdgeInsets.only(top: 60),
-              child: CabinDataTable(items: allhouses,userType: UserType.service,))
+              child: CabinDataTable(items: allhouses,userType: UserType.service,refresh: ()async{await getList();setState(() {});}))
           : Center(
               child: Container(
               width: 50,
               height: 50,
               child: CircularProgressIndicator(),
             )),
-    );
+      ]));
   }
 
   Future getList() async {

@@ -28,7 +28,7 @@ class AdminOrderListPageState extends State<AdminOrderListPage> {
           ? Container(
               alignment: Alignment.topCenter,
               padding: EdgeInsets.only(top: 60),
-              child: CabinDataTable(items: allorders,userType: UserType.service,))
+              child: CabinDataTable(items: allorders,userType: UserType.service,refresh: ()async{await getList();setState(() {});}))
           : Center(
               child: Container(
               width: 50,

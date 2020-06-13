@@ -12,7 +12,7 @@ class HouseProvider extends IOClient {
           method: "POST",
           actionName: "Suspend");
     } on CabinError catch (e) {
-      BotToast.showSimpleNotification(title: "操作失败", subTitle: e.toString());
+      Toaster.showToast(title: "操作失败", subTitle: e.toString());
       return false;
     }
     return true;
@@ -45,6 +45,14 @@ class HouseProvider extends IOClient {
     );
     return getHouseListFromResponse(response);
   }
+    Future<List<House>> getAvailables() async {
+    Map response = await communicateWith(
+      target: "house/available/",
+      method: "GET",
+      actionName: "Get ALL",
+    );
+    return getHouseListFromResponse(response);
+  }
 
   Future<List<House>> search(String keyword) async {
     Map response = await communicateWith(
@@ -69,7 +77,7 @@ class HouseProvider extends IOClient {
         param: house.toMap(),
       );
     } on CabinError catch (e) {
-      BotToast.showSimpleNotification(title: "创建失败", subTitle: e.toString());
+      Toaster.showToast(title: "创建失败", subTitle: e.toString());
     }
     return House.fromMap(response["data"]);
   }
@@ -83,7 +91,7 @@ class HouseProvider extends IOClient {
         param: house.toMap(),
       );
     } on CabinError catch (e) {
-      BotToast.showSimpleNotification(title: "创建失败", subTitle: e.toString());
+      Toaster.showToast(title: "创建失败", subTitle: e.toString());
     }
   }
 
@@ -137,4 +145,5 @@ class HouseProvider extends IOClient {
     // await Future.delayed(Duration(seconds: 1));
     return getDemoRecomSync();
   }
+
 }

@@ -23,9 +23,7 @@ class CabinNavBarState extends State<CabinNavBar> {
   void initState() {
     tasker = _Tasker(() {
       if (!mounted) return;
-      setState(() {
-        debugPrint("setState!");
-      });
+      setState(() {});
     });
     super.initState();
     tasker.start();
@@ -35,7 +33,7 @@ class CabinNavBarState extends State<CabinNavBar> {
   Widget build(BuildContext context) {
     _screenWidth = MediaQuery.of(context).size.width;
     _screenHeight = MediaQuery.of(context).size.height;
-    return AppBar(
+    return Hero(tag:"appbar",child: AppBar(
       backgroundColor: Color.lerp(Colors.orange[800],Colors.brown,0.8),
       automaticallyImplyLeading: false,
       centerTitle: false,
@@ -61,7 +59,7 @@ class CabinNavBarState extends State<CabinNavBar> {
                                     child: Image.asset("images/title.png",fit: BoxFit.cover,)))),
                             accountSpace(),
                           ]))
-    );
+    ));
   }
 
   Widget leading() {
@@ -94,8 +92,11 @@ class CabinNavBarState extends State<CabinNavBar> {
               padding: EdgeInsets.zero,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
-              onPressed: () {
-                Navigator.pushNamed(context, "/PersonalHome");
+              onPressed: ()async {
+                String name =ModalRoute.of(context).settings.name;
+                if(name!="/center" || (name!="/home")||(name =="/home" && UserProvider.currentUser.type == UserType.rentee))
+                  await Navigator.pushReplacementNamed(context, "/center");
+                tasker.start();
               },
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),

@@ -7,12 +7,14 @@ import 'package:dio/adapter_browser.dart';
 import 'package:dio/browser_imp.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:url_launcher_web/url_launcher_web.dart';
 // import 'package:http/http.dart' as http;
 
 class IOClient {
   DioForBrowser dio;
   // var client = http.Client();
   static String baseUrl = 'http://back.cabin.com:8000';
+
   IOClient() {
     BaseOptions options = BaseOptions(
         // baseUrl: 'http://39.97.104.62:8990/', //TODO: put url;
@@ -24,6 +26,13 @@ class IOClient {
     var adapter = BrowserHttpClientAdapter();
     adapter.withCredentials = true;
     dio.httpClientAdapter = adapter;
+  }
+
+  static openContract() async {
+    UrlLauncherPlugin plugin = UrlLauncherPlugin();
+    if (await plugin.canLaunch(baseUrl + "/static/cabin_contract.pdf")) {
+      plugin.openNewWindow(baseUrl + "/static/cabin_contract.pdf");
+    }
   }
 
   Future<Map> communicateWith(

@@ -1,11 +1,11 @@
 {
-    "name": "cabin",
-    "short_name": "cabin",
+    "name": "木居——青年租房系统",
+    "short_name": "木居",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "木居，属于青年的专属租房平台。",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

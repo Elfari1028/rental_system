@@ -4,7 +4,9 @@ import 'package:cabin/base/error.dart';
 import 'package:cabin/base/picture.dart';
 import 'package:flutter/material.dart';
 import 'package:cabin/base/ioclient.dart';
+
 import 'dart:async';
+
 
 part 'house_provider.dart';
 
@@ -237,7 +239,7 @@ class House extends CabinModel {
     List<Image> images = List<Image>();
     this.imagePaths.forEach((element) {
       images.add(Image.network(element,
-          fit: BoxFit.cover,
+          fit: BoxFit.fitWidth,
           loadingBuilder: (BuildContext context, Widget child,
                   ImageChunkEvent loadingProgress) =>
               loadingProgress != null

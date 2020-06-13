@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:cabin/base/error.dart';
 import 'package:cabin/base/house.dart';
 import 'package:cabin/base/order.dart';
 import 'package:cabin/base/support_request.dart';
@@ -146,12 +147,11 @@ class SupportRequestEditorState extends State<SupportRequestEditor> {
 
   Widget submitButton() {
     return RaisedButton(
-      onPressed: () {
-        onSubmit();
-      },
-      child: Text("提交修改", style: TextStyle(color: Colors.white)),
+      onPressed: (){ onSubmit();},
+      child: Text("提交修改"),
     );
   }
+
 
   Future onSubmit() async {
     isSubmitting = true;
@@ -165,7 +165,7 @@ class SupportRequestEditorState extends State<SupportRequestEditor> {
     });
     if (isSubmitting == false ||
         picController.getPendedPictures().length == 0) {
-      BotToast.showSimpleNotification(title: "图片不得为空");
+      Toaster.showToast(title: "图片不得为空");
       setState(() {});
       return;
     }
@@ -174,7 +174,7 @@ class SupportRequestEditorState extends State<SupportRequestEditor> {
     bool result = await SupportRequestProvider.instance
         .create(newRequest, picController.getPendedPictures());
     if (result == true) {
-      BotToast.showSimpleNotification(title: "创建成功");
+      Toaster.showToast(title: "创建成功");
       Navigator.of(context).pop();
     }
     isSubmitting = false;

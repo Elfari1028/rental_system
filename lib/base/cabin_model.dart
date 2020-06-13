@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:bot_toast/bot_toast.dart';
 
 abstract class CabinModel {
   List<String> getFieldNames();
@@ -8,3 +9,13 @@ abstract class CabinModel {
 }
 
 typedef CabinModelComparator = int Function(CabinModel a, CabinModel b);
+
+extension on BotToast{
+  showToast({Icon icon,String title,String subtitle}){
+    BotToast.showNotification(
+      leading:(_)=>icon,
+      title: (_)=>Text(title),
+      subtitle: (_)=>Text(subtitle),
+    );
+  }
+}

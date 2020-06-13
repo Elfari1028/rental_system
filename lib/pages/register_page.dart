@@ -295,7 +295,7 @@ class RegisterPageState extends State<RegisterPage> {
           style: TextStyle(fontSize: 25),
         ),
         subtitle: (func) => Text(
-          "请登录。",
+          "请继续进行您的操作",
           style: TextStyle(fontSize: 15, color: Colors.grey),
         ),
       );

@@ -12,6 +12,9 @@ extension CabinDT on DateTime{
   String toMyString() { 
     String ret = this.toString();
     return this.toString().substring(0,ret.length<19?ret.length:19);}
+  String toShortString() { 
+    String ret = this.toString();
+    return this.toString().substring(0,ret.length<10?ret.length:10);}
 }
 
 enum OrderStatus {
@@ -113,7 +116,7 @@ class Order extends CabinModel {
         'amount': amount,
         'start': (startTime.toIso8601String()),
         'end': endTime.toIso8601String(),
-        'uid': rentee.phone,
+        'uid': rentee.id,
         'hid': house.id,
         'rid': respondant==null?null:respondant.id,
       };

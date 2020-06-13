@@ -28,7 +28,7 @@ class RenteeOrderListPageState extends State<RenteeOrderListPage> {
           ? Container(
               alignment: Alignment.topCenter,
               padding: EdgeInsets.only(top: 60),
-              child: CabinDataTable(items: allorders,userType: UserType.rentee,))
+              child: CabinDataTable(items: allorders,userType: UserType.rentee,refresh: ()async{await getList();setState(() {});}))
           : Center(
               child: Container(
               width: 50,

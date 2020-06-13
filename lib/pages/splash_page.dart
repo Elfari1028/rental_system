@@ -1,32 +1,10 @@
 
+import 'package:cabin/base/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-// Future<int> duringSplash() async {
-//   Map param = Map();
-//   int userType = 0;
-//   try {
-//     // param["id"] = await LocalData.obtainValue("id");
-//     // param["password"] = await LocalData.obtainValue("password");
-//     //TODO: LOGIN
-//     //TODO: OBTAIN RETURN PACKAGE
-//     //TODO: OBTAIN userType;
-//   } catch (erorr) {
-//     return 0;
-//   }
-//   return userType;
-// }
-
 class AnimatedSplash extends StatefulWidget {
-  // Future<int> customFunction;
-
-  final Map<dynamic, String> outputAndHome = {
-    0: '/home',
-    /* TODO: input 4 different destination */
-  };
-
-  AnimatedSplash() {}
-
+  AnimatedSplash();
   @override
   _AnimatedSplashState createState() => _AnimatedSplashState();
 }
@@ -64,8 +42,7 @@ class _AnimatedSplashState extends State<AnimatedSplash>
   }
 
   Future task() async {
-    // int value = await duringSplash();
-    await Future.delayed(Duration(milliseconds: 500));
-    Navigator.pushReplacementNamed(context,widget.outputAndHome[0]);
+    await UserProvider.instance.tryGetMyInfo();
+    Navigator.pushReplacementNamed(context,'/home');
   }
 }

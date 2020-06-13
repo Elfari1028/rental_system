@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cabin/base/user.dart';
 import 'package:cabin/widget/cabin_card.dart';
 import 'package:cabin/widget/cabin_nav_bar.dart';
@@ -61,8 +63,8 @@ class PersonalCenterPageState extends State<PersonalCenterPage> {
                           border: Border.all(color: Colors.black, width: 1))),
                   FlatButton(
                       onPressed: () async {
-                        Navigator.of(context).pushNamed('/account/edit',arguments:{'user':UserProvider.currentUser,'isAdmin':false} );
-                        // setState(() {});
+                        await Navigator.of(context).pushNamed('/account/edit',arguments:{'user':UserProvider.currentUser,'isAdmin':false} );
+                        setState(() {});
                       },
                       child: Text("编辑资料")),
                   Divider(),
@@ -125,24 +127,35 @@ class PersonalCenterPageState extends State<PersonalCenterPage> {
     List<Widget> ret = List<Widget>();
     switch (UserProvider.currentUser.type) {
       case UserType.service:
-        ret.add(actionCard("订单管理", Icons.payment, () {
-          Navigator.of(context).pushNamed('/order/all');}));
-        ret.add(actionCard("工单管理", Icons.feedback, () {
-          Navigator.of(context).pushNamed('/support/all');}));
-        ret.add(actionCard("房源管理", Icons.home, () {
-          Navigator.of(context).pushNamed('/house/all');
+        ret.add(actionCard("订单管理", Icons.payment, ()async {
+          await Navigator.of(context).pushNamed('/order/all');}));
+          setState(() {});
+        ret.add(actionCard("工单管理", Icons.feedback, ()async {
+          await Navigator.of(context).pushNamed('/support/all');}));
+          setState(() {});
+        ret.add(actionCard("房源管理", Icons.home, ()async {
+          await Navigator.of(context).pushNamed('/house/all');
+          setState(() {});
         }));
-        ret.add(actionCard("用户管理", Icons.contacts, () {
-          Navigator.of(context).pushNamed('/account/all');
+        ret.add(actionCard("用户管理", Icons.contacts, ()async {
+          await Navigator.of(context).pushNamed('/account/all');
+          setState(() {});
         }));
         break;
       case UserType.maintenance:
-        ret.add(actionCard("工单管理", Icons.feedback, () {}));
+        ret.add(actionCard("工单管理", Icons.feedback, ()async {
+        await Navigator.of(context).pushNamed('/request/maintenance');
+        setState(() {});
+        }));
         break;
       case UserType.rentee:
-        ret.add(actionCard("订单管理", Icons.payment,() {
-          Navigator.of(context).pushNamed('/order/mine');}));
-        ret.add(actionCard("投诉报修", Icons.feedback, () {}));
+        ret.add(actionCard("订单管理", Icons.payment,()async {
+          await Navigator.of(context).pushNamed('/order/mine');}));
+          setState(() {});
+        ret.add(actionCard("投诉报修", Icons.feedback, ()async {
+          await Navigator.of(context).pushNamed('/support/mine');
+          setState(() {});
+        }));
     }
     return ret;
   }
@@ -150,23 +163,13 @@ class PersonalCenterPageState extends State<PersonalCenterPage> {
   Widget actionCard(String name, IconData icon, Function onPressed) {
     return Padding(
         padding: EdgeInsets.all(20),
-        child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: LinearGradient(
-                    colors: [Colors.blue[600], Colors.blue[300]],
-                    stops: [0.0, 1.0],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight)),
             child: RaisedButton(
                 onPressed: onPressed,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                elevation: 5.0,
-                highlightElevation: 1.0,
+                    borderRadius: BorderRadius.circular(15)),
+                elevation: 7.0,
+                highlightElevation: 2.0,
                 hoverElevation: 10.0,
-                color: Colors.transparent,
-                hoverColor: Colors.transparent,
                 highlightColor: Colors.black12,
                 splashColor: Colors.transparent,
                 child: Column(
@@ -179,6 +182,6 @@ class PersonalCenterPageState extends State<PersonalCenterPage> {
                               fontSize: 35,
                               fontWeight: FontWeight.bold,
                               color: Colors.white))
-                    ]))));
+                    ])));
   }
 }

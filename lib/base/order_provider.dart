@@ -17,7 +17,7 @@ class OrderProvider extends IOClient {
         param: order.toCreateMap(),
       );
     } on CabinError catch (e) {
-      BotToast.showSimpleNotification(title: "下单失败");
+      Toaster.showToast(title: "下单失败");
       print(e.toString());
       return false;
     }
@@ -34,7 +34,8 @@ class OrderProvider extends IOClient {
         param: order.toCommMap(),
       );
     } on CabinError catch (e) {
-      BotToast.showSimpleNotification(title: "修改失败");
+      debugPrint(e.toString());
+      Toaster.showToast(title: "修改失败");
       return false;
     }
     return true;
@@ -48,7 +49,7 @@ class OrderProvider extends IOClient {
         target: 'order/getall/',
       );
     } on CabinError catch (e) {
-      BotToast.showSimpleNotification(title: "修改失败");
+      Toaster.showToast(title: "修改失败");
       return null;
     }
     return getOrdersFromResponse(response);
@@ -61,5 +62,7 @@ class OrderProvider extends IOClient {
     });
     return ret;
   }
+
+  void updateStatus(Order order) {}
 
 }

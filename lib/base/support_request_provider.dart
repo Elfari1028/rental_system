@@ -16,7 +16,7 @@ class SupportRequestProvider extends IOClient {
         param: request.toCreateMap(),
       );
     } on CabinError catch (e) {
-      BotToast.showSimpleNotification(title: "创建失败", subTitle: e.toString());
+      Toaster.showToast(title: "创建失败", subTitle: e.toString());
       return false;
     }
     return true;
@@ -31,7 +31,7 @@ class SupportRequestProvider extends IOClient {
         actionName: "getall",
       );
     } on CabinError catch (e) {
-      BotToast.showSimpleNotification(title: "获取失败", subTitle: e.toString());
+      Toaster.showToast(title: "获取失败", subTitle: e.toString());
       return null;
     }
     return getRequestsFromResponse(response);
@@ -65,7 +65,7 @@ class SupportRequestProvider extends IOClient {
         actionName: "getall",
       );
     } on CabinError catch (e) {
-      BotToast.showSimpleNotification(title: "获取失败", subTitle: e.toString());
+      Toaster.showToast(title: "获取失败", subTitle: e.toString());
       return null;
     }
     return getConvoFromResponse(response);
@@ -85,9 +85,63 @@ class SupportRequestProvider extends IOClient {
         actionName: "reply to",
       );
     } on CabinError catch (e) {
-      BotToast.showSimpleNotification(title: "回复失败", subTitle: e.toString());
+      Toaster.showToast(title: "回复失败", subTitle: e.toString());
       return null;
     }
     return SupportRequestReply.fromMap(response['data']);
+  }
+
+  Future rate(Ratings ratings)async{
+    try{
+      await communicateWith(
+        actionName: "Rate",
+        method: "POST",
+        param: ratings.toMap(),
+        target: '/support/rate/'
+      );
+    }on CabinError catch(e){
+      Toaster.showToast(title: "评价失败", subTitle: e.toString());
+    }
+  }
+
+  Future<User> appointFixer(int id,SupportRequest request)async{
+    Map response;
+    try{
+      response = await communicateWith(
+        actionName: 'appointFixer',
+        method: 'POST',
+        param: {'fid':id,'srid':request.id},
+        target: '/support/dispatch'
+      );
+    }on CabinError catch(e){
+      Toaster.showToast(title: "分配失败", subTitle: e.toString());
+    }
+    return User.fromMap(response['data']);
+  }
+  Future appointRespondant(int id,int srid)async{
+    try{
+      await communicateWith(
+        actionName: 'appoint',
+        method: 'POST',
+        param: {'fid':id,'srid':srid},
+        target: '/support/pickup'
+      );
+    }on CabinError catch(e){
+      Toaster.showToast(title: "分配失败", subTitle: e.toString());
+    }
+  }
+  Future close(SupportRequest request)async{
+    try{
+      await communicateWith(
+        actionName: 'close',
+        method: 'POST',
+        param: {'srid':request.id},
+        target: '/support/close'
+      );
+    }on CabinError catch(e){
+      Toaster.showToast(title: "分配失败", subTitle: e.toString());
+      return ;
+    }
+    request.status = RequestStatus.closed;
   }
 }

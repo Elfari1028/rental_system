@@ -1,3 +1,6 @@
+import 'package:bot_toast/bot_toast.dart';
+import 'package:flutter/material.dart';
+
 class CabinError {
   String className;
   String code;
@@ -21,4 +24,38 @@ class FrontError extends CabinError {
 class BackError extends CabinError {
   BackError([className = "", code = "", msg = ""])
       : super(className, code, msg);
+}
+
+class Toaster{
+    static showToast({Widget leading,String title,String subTitle}){
+    leading??=Icon(
+          Icons.notifications_active,
+          color: Colors.brown,
+        );
+     BotToast.showCustomNotification(
+       toastBuilder:(ctx)=>  Card(
+        margin: EdgeInsets.symmetric(horizontal: 20,vertical:5),
+        elevation: 7.0,
+        child: ListTile(
+          leading: leading,
+          title: Text(title,  style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
+          subtitle: subTitle==null?null:Text(subTitle, style:TextStyle(fontSize: 15, color: Colors.grey[700]))),
+        ),
+       );
+  }
+  static showSimpleToast({Widget leading,String title,String subTitle}){
+    leading??=Icon(
+          Icons.notifications_active,
+          color: Colors.brown,
+        );
+     BotToast.showNotification(
+        leading: (func) => leading,
+        title: (func) => Text(
+          title,
+          style: TextStyle(fontSize: 25),
+        ),
+        subtitle: subTitle == null?null:(func) => Text(
+          subTitle,
+          style: TextStyle(fontSize: 15, color: Colors.grey)));
+  }
 }

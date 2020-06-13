@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:cabin/base/error.dart';
 import 'package:cabin/base/house.dart';
 import 'package:cabin/widget/editor/custom_radio.dart';
 import 'package:cabin/widget/editor/input_field.dart';
@@ -55,7 +56,7 @@ class HouseEditorState extends State<HouseEditor> {
           : Container(
               width: 500,
               padding: EdgeInsets.all(30),
-              child: ListView(shrinkWrap: true, children: list),
+              child: ListView(shrinkWrap: true, children: list,physics:ClampingScrollPhysics(),),
             ),
     ));
   }
@@ -70,8 +71,8 @@ class HouseEditorState extends State<HouseEditor> {
         termField(),
         statusField(),
         capacityField(),
-        submitButton(),
         pictureField(),
+        submitButton(),
       ];
 
   Widget idField() => CabinInputField(
@@ -133,7 +134,7 @@ class HouseEditorState extends State<HouseEditor> {
       });
   Widget statusField() => CabinRadioField(
       enabled: true,
-      labels: ["暂停出租 从 ", "正常出租"],
+      labels: [ "正常出租","暂停出租 "],
       values: HouseStatus.values,
       title: "类型",
       onChange: (status) {
@@ -155,8 +156,7 @@ class HouseEditorState extends State<HouseEditor> {
   Widget submitButton() {
     return RaisedButton(
       onPressed: (){ onSubmit();},
-      child: Text("提交修改", style: TextStyle(color: Colors.white)),
-      color: Colors.blue,
+      child: Text("提交修改"),
     );
   }
 
@@ -189,10 +189,10 @@ class HouseEditorState extends State<HouseEditor> {
       await HouseProvider.instance
           .update(house, picController.getPendedPictures());
     if (result == true) {
-      BotToast.showSimpleNotification(title: "修改成功");
+      Toaster.showToast(title: "修改成功");
     } else if (tmp != null) {
       house = tmp;
-      BotToast.showSimpleNotification(title: "创建成功");
+      Toaster.showToast(title: "创建成功");
     }
     isSubmitting = false;
     setState(() {});

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:bot_toast/bot_toast.dart';
+import 'package:cabin/base/error.dart';
 import 'package:cabin/base/house.dart';
 import 'package:cabin/base/order.dart';
 import 'package:cabin/base/user.dart';
@@ -69,55 +70,56 @@ class HousePageState extends State<HousePage> {
               child: CarouselSlider(
                   items: imageCards(),
                   options: CarouselOptions(
-                    height: 600,
-                    aspectRatio: 16 / 9,
+                    // height: 600,
+                    aspectRatio: 16 / 5,
                     autoPlay: true,
                     initialPage: 0,
                     viewportFraction: 0.5,
-                    autoPlayInterval: Duration(seconds:5),
+                    autoPlayInterval: Duration(seconds: 5),
                     autoPlayAnimationDuration: Duration(milliseconds: 800),
                     autoPlayCurve: Curves.fastOutSlowIn,
                     enlargeCenterPage: true,
                     scrollDirection: Axis.horizontal,
                   )))));
-  Widget body() => Container(
-      width: 600,
-      padding: EdgeInsets.all(10),
-      child: MarkdownWidget(
-        physics: NeverScrollableScrollPhysics(),
-        data: house.intro,
-        shrinkWrap: true,
-      ));
+  Widget body() => Card(
+      elevation: 7.0,
+      child: Container(
+          width: 600,
+          padding: EdgeInsets.all(30),
+          child: MarkdownWidget(
+            physics: NeverScrollableScrollPhysics(),
+            data: house.intro,
+            shrinkWrap: true,
+          )));
   List<Widget> imageCards() {
     List<Widget> ret = List<Widget>();
     for (int i = 0; i < house.images.length; i++) {
-      ret.add(FittedBox(fit:BoxFit.cover,child:Container(
-          // height: 600,
-          padding: EdgeInsets.all(50),
-          child:ClipRRect(
-              borderRadius: BorderRadius.circular(25),
+      ret.add(FittedBox(
+          fit: BoxFit.cover,
+          child: Container(
+              // height: 600,
+              padding: EdgeInsets.all(50),
               child: RaisedButton(
-            onPressed: (){},
-            color: Colors.transparent,
-            hoverColor: Colors.white10,
-            highlightColor: Colors.black12,
-            elevation: 7.0,
-            hoverElevation: 10.0,
-            padding: EdgeInsets.zero,
-            child:  house.images[i],
-            )),
-          )));
+                onPressed: () {},
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25)),
+                color: Colors.transparent,
+                hoverColor: Colors.white10,
+                highlightColor: Colors.black12,
+                elevation: 7.0,
+                hoverElevation: 10.0,
+                padding: EdgeInsets.zero,
+                child: house.images[i],
+              ))));
     }
     return ret;
   }
 
-  Widget side() => Container(
-        width: 400,
-        padding: EdgeInsets.all(30),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(width: 1),
-        ),
+  Widget side() => Card(
+      elevation: 7.0,
+      child: Container(
+        width: 600,
+        padding: EdgeInsets.all(15),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,7 +158,7 @@ class HousePageState extends State<HousePage> {
             )
           ],
         ),
-      );
+      ));
 
   Widget shortTermRangeSelector() => Container(
       height: 50,
@@ -246,29 +248,10 @@ class HousePageState extends State<HousePage> {
       ]));
 
   void placeOrder() async {
-    if(UserProvider.currentUser == null){
-      BotToast.showSimpleNotification(title: "请先登录");
+    if (UserProvider.currentUser == null) {
+      Toaster.showToast(title: "请先登录");
       return;
     }
-    bool result = await showDialog<bool>(
-        context: context,
-        builder: (ctx) => SimpleDialog(title: Text("下单"), children: [
-              SimpleDialogOption(
-                  child: Text("确定"),
-                  onPressed: () {
-                    Navigator.of(ctx).pop(true);
-                  }),
-              SimpleDialogOption(
-                  child: Text("取消"),
-                  onPressed: () {
-                    Navigator.of(ctx).pop(false);
-                  }),
-            ]));
-    if (result == false) return;
-    final ProgressDialog pr =
-        ProgressDialog(context, isDismissible: false, showLogs: true);
-    await pr.show();
-    print("SHOW");
     OrderType orderType = OrderTypeHelper.fromInt(widget.house.term.value);
     DateTime end = orderType.isShort
         ? endDate
@@ -278,16 +261,83 @@ class HousePageState extends State<HousePage> {
     amount = house.price * amount;
     Order order = Order.create(startDate, end, UserProvider.currentUser.id,
         widget.house.id, orderType, amount);
+
+    bool result = await showDialog<bool>(
+        context: context,
+        builder: (ctx) =>Dialog(child: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 280.0,maxWidth:700),
+          child:Card(
+              elevation: 5,
+              margin: EdgeInsets.zero,
+              shape:
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+              child:
+                  SingleChildScrollView(child:Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                FittedBox(fit:BoxFit.fitWidth, child:house.cover,),
+                ListTile(title: Text("房屋名称"), subtitle: Text(house.title)),
+                Divider(),
+                ListTile(
+                  title: Text("订单金额"),
+                  subtitle: Text(order.priceInYuan.toString() + "元"),
+                ),
+                Divider(),
+                ListTile(
+                  title: Text("入住日期"),
+                  subtitle: Text(startDate.toShortString()),
+                ),
+                Divider(),
+                ListTile(
+                  title: Text("到期日期"),
+                  subtitle: Text(end.toShortString()),
+                ),
+                Divider(),
+                ListTile(
+                  title: Text("您的联系电话"),
+                  subtitle: Text(UserProvider.currentUser.phone),
+                ),
+                Divider(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                    child: Text(
+                      "注意: 下单后需等待通过审核再进行付款，请留心审核状态，一般在1-3工作日内完成。",
+                      softWrap: true,
+                    )),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20,vertical: 5),
+                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    RaisedButton(
+                      color: Colors.red,
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text("取消"),
+                    ),
+                    RaisedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text("确认"),
+                    )
+                  ] )
+                )
+              ])))))
+        );
+    if (result == null||result == false) return;
+    final ProgressDialog pr =
+        ProgressDialog(context, isDismissible: false, showLogs: true);
+    await pr.show();
+    print("SHOW");
+
     result = await OrderProvider.instance.create(order);
     if (result) {
-      BotToast.showSimpleNotification(title: "创建成功");
+      Toaster.showToast(title: "创建成功");
       if (orderType.isShort) {
         //TODO: ADD PAYMENT
       } else {
         //TODO: ADD PRINT
       }
     } else
-      BotToast.showSimpleNotification(title: "创建失败");
+      Toaster.showToast(title: "创建失败");
     pr.hide();
   }
 }

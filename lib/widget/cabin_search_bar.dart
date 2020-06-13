@@ -1,11 +1,15 @@
+import 'dart:isolate';
+
+import 'package:cabin/base/house.dart';
 import 'package:flutter/material.dart';
 import 'adaptive.dart';
 import 'cabin_card.dart';
 
 class CabinSearchBar extends StatefulWidget {
-  final Function(String keywords, int roomType) onSearch;
-  final Function(String keyword, int roomType) onOptionsChange;
-  CabinSearchBar({@required this.onSearch, @required this.onOptionsChange});
+  final Function(String keyword) onSearch;
+  final Function(HouseTerm roomType) onTermChange;
+  final Function(HouseCapacity roomCap) onCapChange;
+  CabinSearchBar({@required this.onSearch, @required this.onTermChange,@required this.onCapChange});
   createState() => CabinSearchBarState();
 }
 
@@ -13,7 +17,8 @@ class CabinSearchBarState extends State<CabinSearchBar> {
   double _screenWidth;
   double _screenHeight;
   TextEditingController keyword = TextEditingController();
-  int type = 3;
+  HouseTerm term;
+  HouseCapacity capacity;
   List<String> optionsName = ["人数", "类型"];
   @override
   Widget build(BuildContext context) {
@@ -42,7 +47,7 @@ class CabinSearchBarState extends State<CabinSearchBar> {
               suffix: RaisedButton(
                   color: Colors.brown,
                   onPressed: () {
-                    widget.onSearch(keyword.text, type);
+                    widget.onSearch(keyword.text);
                   },
                   child: Text("搜索", style: TextStyle(color: Colors.white)))),
         ),
@@ -57,74 +62,49 @@ class CabinSearchBarState extends State<CabinSearchBar> {
         children: [
           Padding(
             padding: EdgeInsets.all(8),
-            child: PopupMenuButton<int>(
-              itemBuilder: (builder) => <PopupMenuEntry<int>>[
-                PopupMenuItem<int>(
-                    value: 1,
+            child: PopupMenuButton<HouseCapacity>(
+              itemBuilder: (builder) => <PopupMenuEntry<HouseCapacity>>[
+                PopupMenuItem<HouseCapacity>(
+                    value: HouseCapacity.mono,
                     child: Text("单人间", style: TextStyle(fontSize: 20))),
-                PopupMenuItem<int>(
-                    value: 2,
+                PopupMenuItem<HouseCapacity>(
+                    value:HouseCapacity.bi,
                     child: Text("双人间", style: TextStyle(fontSize: 20))),
-                PopupMenuItem<int>(
-                    value: 4,
+                PopupMenuItem<HouseCapacity>(
+                    value: HouseCapacity.quad,
                     child: Text("四人间", style: TextStyle(fontSize: 20))),
               ],
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black, width: 1),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                height: 50,
-                width: 100,
-                alignment: Alignment.center,
-                child: Text(
-                  optionsName[0],
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
+              child: IgnorePointer(child:RaisedButton(onPressed: (){},child:Text(optionsName[0]))),
               onSelected: (value) {
-                type = type.sign * value;
-                optionsName[0] = capType;
+                widget.onCapChange(
+                  value
+                );
+                optionsName[0] = value.title;
                 setState(() {});
               },
             ),
           ),
           Padding(
             padding: EdgeInsets.all(8),
-            child: PopupMenuButton<int>(
-              itemBuilder: (builder) => <PopupMenuEntry<int>>[
-                PopupMenuItem<int>(
-                    value: -1,
+            child: PopupMenuButton<HouseTerm>(
+              itemBuilder: (builder) => <PopupMenuEntry<HouseTerm>>[
+                PopupMenuItem<HouseTerm>(
+                    value: HouseTerm.short,
                     child: Text(
                       "短租",
                       style: TextStyle(fontSize: 20),
                     )),
-                PopupMenuItem<int>(
-                    value: 1,
+                PopupMenuItem<HouseTerm>(
+                    value: HouseTerm.long,
                     child: Text(
                       "长租",
                       style: TextStyle(fontSize: 20),
                     )),
               ],
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black, width: 1),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                height: 50,
-                width: 100,
-                alignment: Alignment.center,
-                child: Text(
-                  optionsName[1],
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
+              child:IgnorePointer(child:RaisedButton(onPressed: (){},child:Text(optionsName[1]))),
               onSelected: (value) {
-                type = type.abs() * value.sign;
-                optionsName[1] = rentType;
-                debugPrint("yes father");
+                widget.onTermChange(value);
+                optionsName[1] =value.title;
                 setState(() {});
               },
             ),
@@ -143,22 +123,4 @@ class CabinSearchBarState extends State<CabinSearchBar> {
     );
   }
 
-  String get capType {
-    switch (type) {
-      case -1:
-      case 1:
-        return "单人间";
-      case 2:
-      case -2:
-        return "双人间";
-      case 4:
-      case -4:
-        return "四人间";
-    }
-    return null;
-  }
-
-  String get rentType {
-    return type > 0 ? "短租" : "长租";
-  }
 }

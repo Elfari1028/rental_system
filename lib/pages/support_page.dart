@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:cabin/base/error.dart';
 import 'package:cabin/base/support_request.dart';
 import 'package:cabin/base/order.dart';
 import 'package:cabin/base/user.dart';
@@ -32,7 +33,7 @@ class SupportConvoPageState extends State<SupportConvoPage> {
     return CabinScaffold(
       navBar: CabinNavBar(),
       body: requestDetail(),
-      side: Column(children:[conversation(), replyField()]),
+      side: Column(children:[conversation(),if(widget.request.status.value<3)replyField()]),
       bodyRatio: 5,
     );
   }
@@ -175,7 +176,7 @@ class SupportConvoPageState extends State<SupportConvoPage> {
     await dialog.show();
     if (replyController.text == "") {
       dialog.hide();
-      BotToast.showSimpleNotification(title: "回复不得留空");
+      Toaster.showToast(title: "回复不得留空");
       return;
     }
     SupportRequestReply reply = SupportRequestReply.create(

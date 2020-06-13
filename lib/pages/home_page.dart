@@ -12,6 +12,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   double _screenWidth;
   double _screenHeight;
+  TextEditingController keywords = TextEditingController();
   _Tasker tasker;
 
   @override
@@ -57,12 +58,14 @@ class HomePageState extends State<HomePage> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   child: TextField(
+                    controller: keywords,
                     decoration: InputDecoration(
                         prefixIcon: Icon(Icons.search),
                         border: InputBorder.none,
                         suffix: RaisedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, "/explore");
+                          onPressed: ()async {
+                            await Navigator.pushNamed(context, "/explore",arguments:{"keyword":keywords.text} );
+                            setState((){});
                           },
                           color: Colors.brown,
                           splashColor: Colors.white,
@@ -113,7 +116,7 @@ class _Tasker extends Tasker {
 
   _Tasker(VoidCallback onFinished) : super(onFinished: onFinished);
   Future<void> task() async {
-    _data["houselist"] = await HouseProvider.instance.getAllHouses();
+    _data["houselist"] = await HouseProvider.instance.getAvailables();
     _status["houselist"] = true;
   }
 

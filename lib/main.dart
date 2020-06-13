@@ -1,9 +1,13 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:cabin/base/user.dart';
 import 'package:cabin/pages/admin/house_list.dart';
 import 'package:cabin/pages/admin/order_list.dart';
 import 'package:cabin/pages/admin/request_list.dart';
 import 'package:cabin/pages/admin/user_list.dart';
+import 'package:cabin/pages/maintenance/request_list.dart';
+import 'package:cabin/pages/personal_center_page.dart';
 import 'package:cabin/pages/rentee/order_list.dart';
+import 'package:cabin/pages/rentee/request_list.dart';
 import 'package:cabin/pages/support_page.dart';
 import 'package:cabin/widget/editor/house_editor.dart';
 import 'package:cabin/widget/editor/support_request_editor.dart';
@@ -12,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:cabin/pages/explore_page.dart';
 import 'package:cabin/pages/home_page.dart';
 import 'package:cabin/pages/house_page.dart';
-import 'package:cabin/pages/personal_Center_page.dart';
 import 'package:cabin/pages/register_page.dart';
 import 'package:cabin/pages/login_page.dart';
 import 'pages/splash_page.dart';
@@ -25,7 +28,7 @@ class Cabin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Cabin!',
+      title: '木居——青年租房平台',
       theme: ThemeData(
           // buttonColor: Colors.brown,
           primaryIconTheme: IconThemeData(color:Colors.black),
@@ -65,7 +68,8 @@ Route<dynamic> _getRoute(RouteSettings settings) {
       widget = AnimatedSplash();
       break;
     case '/home':
-      widget = HomePage();
+      if(UserProvider.currentUser == null || UserProvider.currentUser.type == UserType.rentee)widget = HomePage();
+      else widget = PersonalCenterPage();
       break;
     case '/login':
       widget = LoginPage();
@@ -74,16 +78,21 @@ Route<dynamic> _getRoute(RouteSettings settings) {
       widget = RegisterPage();
       break;
     case '/explore':
-      widget = ExplorePage();
+      Map arguments = settings.arguments as Map;
+      widget = ExplorePage(arguments["keyword"]);
       break;
-    case '/PersonalHome':
+    case '/center':
       widget = PersonalCenterPage();
       break;
-    case '/HouseDetail':
+    case '/house/detail':
       Map arguments = settings.arguments as Map;
       widget = HousePage(arguments["house"]);
       break;
     case '/house/edit':
+      Map arguments = settings.arguments as Map;
+      widget = HouseEditor(arguments["house"]);
+      break;
+    case '/house/create':
       Map arguments = settings.arguments as Map;
       widget = HouseEditor(arguments["house"]);
       break;
@@ -107,6 +116,12 @@ Route<dynamic> _getRoute(RouteSettings settings) {
     case '/support/all':
       widget = AdminSupportRequestListPage();
       break;
+    case '/support/mine':
+      widget = RenteeSupportRequestListPage();
+      break;
+    case '/support/maintenance':
+      widget = FixerSupportRequestListPage();
+      break;
     case '/support/create':
      Map arguments = settings.arguments as Map;
       widget = SupportRequestEditor(arguments["order"], arguments["init"]);
@@ -115,7 +130,6 @@ Route<dynamic> _getRoute(RouteSettings settings) {
      Map arguments = settings.arguments as Map;
       widget = SupportConvoPage(arguments["request"]);
       break;
-    
     default:
       return null;
   }

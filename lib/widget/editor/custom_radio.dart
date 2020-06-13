@@ -1,5 +1,6 @@
 //library custom_radio_grouped_button;
 import 'package:bot_toast/bot_toast.dart';
+import 'package:cabin/base/error.dart';
 import 'package:flutter/material.dart';
 
 class CabinRadioField extends StatelessWidget{  
@@ -24,18 +25,18 @@ class CabinRadioField extends StatelessWidget{
       child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-      Text(title),
+      Text(title,style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),),
       CustomRadioButton(
         buttonColor: Colors.white,
         selectedColor: Colors.brown,
-        width: 000,
-        height: 75,
+        width: 75,
+        height: 50,
         customShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30),side: BorderSide.none),
         buttonLables: labels,
         buttonValues: values,
         enabled: enabled,
         enableShape:  true,
-         horizontal: false,
+         horizontal: true,
          radioButtonValue: onChange,
       ),
     ],));
@@ -127,7 +128,7 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
                       borderRadius: BorderRadius.zero,
                     ),
               onPressed:!widget.enabled?(){
-                BotToast.showSimpleNotification(title: "暂无权限！");
+                Toaster.showToast(title: "暂无权限！");
               }: () {
                 widget.radioButtonValue(widget.buttonValues[index]);
                 setState(() {
@@ -156,9 +157,7 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
   List<Widget> buildButtonsRow() {
     List<Widget> buttons = [];
     for (int index = 0; index < widget.buttonLables.length; index++) {
-      var button = Expanded(
-        // flex: 1,
-        child: Card(
+      var button = Card(
           color: currentSelectedLabel == widget.buttonLables[index]
               ? widget.selectedColor
               : widget.buttonColor,
@@ -189,7 +188,7 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
                       borderRadius: BorderRadius.zero,
                     ),
               onPressed:!widget.enabled?(){
-                BotToast.showSimpleNotification(title: "暂无权限！");}: () {
+                Toaster.showToast( title: "暂无权限！");}: () {
                 widget.radioButtonValue(widget.buttonValues[index]);
                 setState(() {
                   currentSelected = index;
@@ -207,7 +206,6 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
               ),
             ),
           ),
-        ),
       );
       buttons.add(button);
     }
@@ -218,18 +216,17 @@ class _CustomRadioButtonState extends State<CustomRadioButton> {
   Widget build(BuildContext context) {
     return Container(
       height: widget.horizontal
-          ? widget.height * (widget.buttonLables.length + 0.5)
-          : null,
+          ?null: widget.height * (widget.buttonLables.length + 0.5),
       child: Center(
-        child: widget.horizontal
-            ? Column(
+        child: widget.horizontal? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: buildButtonsRow(),
+              )
+            : Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: buildButtonsColumn(),
               )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: buildButtonsRow(),
-              ),
+            ,
       ),
     );
   }

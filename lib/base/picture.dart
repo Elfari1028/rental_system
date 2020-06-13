@@ -41,7 +41,7 @@ class PictureGroupProvider extends IOClient {
           target: "/account/avatar/",
           param: formData);
     } on FrontError catch (e) {
-      BotToast.showSimpleNotification(title: "上传头像失败", subTitle: e.msg);
+      Toaster.showToast(title: "上传头像失败", subTitle: e.msg);
     }
     if(response != null)
       return IOClient.baseUrl+response["data"];

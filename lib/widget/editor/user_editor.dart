@@ -1,4 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
+import 'package:cabin/base/error.dart';
 import 'package:cabin/base/picture.dart';
 import 'package:cabin/base/user.dart';
 import 'package:cabin/widget/editor/avatar_field.dart';
@@ -168,11 +169,14 @@ class UserEditorState extends State<UserEditor> {
         onChange: (type) { values["type"] = type as UserType;return ;},
       );
 
-  Widget submitButton(){
-    return RaisedButton(onPressed:sumbit,child: Text("提交修改",style: TextStyle(color:Colors.white)),color: Colors.blue,);
+  Widget submitButton() {
+    return RaisedButton(
+      onPressed: (){submit();},
+      child: Text("提交修改"),
+    );
   }
 
-  Future sumbit()async{
+  Future submit()async{
     isSubmitting = true;
     setState(() {});
     controllers.forEach((key, controller) {
@@ -193,7 +197,7 @@ class UserEditorState extends State<UserEditor> {
     user.type = values["type"];
     bool result = await UserProvider.instance.update(user);
     if(result == true){
-      BotToast.showSimpleNotification(title: "修改成功");
+      Toaster.showToast(title: "修改成功");
     }
     isSubmitting = false;
     setState(() {});

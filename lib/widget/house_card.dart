@@ -14,7 +14,7 @@ class CabinHouseCard extends StatelessWidget {
       onPressed: () {
         print(house.toMap());
         Navigator.of(context)
-            .pushNamed("/HouseDetail", arguments: {'house': this.house});
+            .pushNamed("/house/detail", arguments: {'house': this.house});
         // .pushNamed('/house/edit',arguments:{'house':this.house});
       },
       borderRadius: BorderRadius.circular(15),

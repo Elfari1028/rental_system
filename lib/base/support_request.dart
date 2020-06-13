@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cabin/base/cabin_model.dart';
 import 'package:cabin/base/error.dart';
@@ -30,7 +32,7 @@ extension RequestStatusHelper on RequestStatus {
       case RequestStatus.closed:
         return 4;
       case RequestStatus.rated:
-        return 4;
+        return 5;
     }
   }
 
@@ -59,6 +61,8 @@ extension RequestStatusHelper on RequestStatus {
         return RequestStatus.dispatched;
       case 4:
         return RequestStatus.closed;
+      case 5:
+        return RequestStatus.rated;
     }
   }
 }
@@ -267,5 +271,23 @@ class SupportRequestReply implements Comparable<SupportRequestReply> {
     this.srid = srid;
     this.user =user;
     this.content = content;
+  }
+}
+
+class Ratings{
+  String content;
+  int srid;
+  int stars;
+  
+  Map toMap()=>{
+    'content':content,
+    'srid':srid,
+    'stars':stars,
+  };
+  
+  Ratings.fromMap(Map map){
+    this.srid = map['srid'];
+    this.stars = map['stars'];
+    this.content = map['content'];
   }
 }

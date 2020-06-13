@@ -24,10 +24,17 @@ class AdminUserListPageState extends State<AdminUserListPage> {
       navBar: CabinNavBar(),
       adaptivePage: false,
       body: dataReady
-          ? Container(
+          ?Column(
+            children:[
+              RaisedButton(onPressed:()async{
+                await Navigator.of(context).pushNamed('/register');
+                setState(() {});
+              },child: Text("注册用户"),
+              ),
+              Container(
               alignment: Alignment.topCenter,
               padding: EdgeInsets.only(top: 60),
-              child: CabinDataTable(items: allusers,userType: UserType.service,))
+              child: CabinDataTable(items: allusers,userType: UserType.service,refresh: ()async{await getList();setState(() {});}))])
           : Center(
               child: Container(
               width: 50,

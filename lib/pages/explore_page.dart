@@ -9,23 +9,43 @@ import 'package:flutter/material.dart';
 
 class ExplorePage extends StatefulWidget {
   final String keyword;
-  ExplorePage({this.keyword = ""});
+  ExplorePage(this.keyword);
   createState() => ExplorePageState();
 }
 
 class ExplorePageState extends State<ExplorePage> {
   double _screenWidth;
   double _screenHeight;
-  _Tasker tasker;
-
+  bool listReady = false;
+  String keyword;
+  HouseTerm term;
+  HouseCapacity cap;
+  List<House> houselist = new List<House>();
   @override
   void initState() {
     super.initState();
-    tasker = new _Tasker(() {
-      if (!mounted) return;
+    keyword = widget.keyword;
+    getList();
+  }
+
+  void getList() async {
+    houselist = await HouseProvider.instance.getAvailables();
+    if (houselist == null) {
+      listReady = false;
       setState(() {});
-    });
-    tasker.start();
+      return;
+    } else
+      listReady = true;
+    if (term != null) houselist.removeWhere((element) => element.term != term);
+    if (cap != null)
+      houselist.removeWhere((element) => element.capacity != cap);
+    if (keyword != null) {
+      houselist.retainWhere((element) =>
+          element.title.contains(keyword) ||
+          element.location.contains(keyword) ||
+          element.intro.contains(keyword));
+    }
+    setState(() {});
   }
 
   @override
@@ -38,16 +58,25 @@ class ExplorePageState extends State<ExplorePage> {
         child: Column(
           children: [
             CabinSearchBar(
-              onSearch: (keywords, type) {
+              onSearch: (keywords) {
+                keyword = keywords;
+                getList();
                 setState(() {});
               },
-              onOptionsChange: (keywords, type) {
+              onTermChange: (type) {
+                term = type;
+                getList();
+                setState(() {});
+              },
+              onCapChange: (type) {
+                cap = type;
+                getList();
                 setState(() {});
               },
             ),
-            tasker.houseListReady
+            listReady
                 ? CabinHouseGridView(
-                    children: tasker.houselist,
+                    children: houselist,
                   )
                 : CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation(Colors.brown),
@@ -57,20 +86,4 @@ class ExplorePageState extends State<ExplorePage> {
       ),
     );
   }
-}
-
-class _Tasker extends Tasker {
-  Map _status = <String, bool>{"houselist": false};
-  Map _data = Map<String, dynamic>();
-  _Tasker(onFinished) : super(onFinished: onFinished);
-  Future task() async {
-    await Future.delayed(Duration(seconds: 2));
-
-    PictureGroupProvider provider = PictureGroupProvider.instance;
-    _data["houselist"] = await HouseProvider.getDemoRecom();
-    _status["houselist"] = true;
-  }
-
-  bool get houseListReady => _status["houselist"];
-  List<House> get houselist => houseListReady ? _data["houselist"] : null;
 }
