@@ -13,7 +13,7 @@ class OrderProvider extends IOClient {
       response = await communicateWith(
         method: "POST",
         actionName: "CREATE ORDER",
-        target: 'order/create/',
+        target: '/order/create/',
         param: order.toCreateMap(),
       );
     } on CabinError catch (e) {
@@ -30,7 +30,7 @@ class OrderProvider extends IOClient {
       response = await communicateWith(
         method: "POST",
         actionName: "CREATE ORDER",
-        target: 'order/update/',
+        target: '/order/update/',
         param: order.toCommMap(),
       );
     } on CabinError catch (e) {
@@ -46,7 +46,7 @@ class OrderProvider extends IOClient {
       response = await communicateWith(
         method: "GET",
         actionName: "GET ALL ORDER",
-        target: 'order/getall/',
+        target: '/order/getall/',
       );
     } on CabinError catch (e) {
       Toaster.showToast(title: "修改失败");

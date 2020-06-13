@@ -13,12 +13,12 @@ import 'package:url_launcher_web/url_launcher_web.dart';
 class IOClient {
   DioForBrowser dio;
   // var client = http.Client();
-  static String baseUrl = 'http://back.cabin.com:8000';
+  static String baseUrl = 'http://39.97.104.62/files';
 
   IOClient() {
     BaseOptions options = BaseOptions(
-        // baseUrl: 'http://39.97.104.62:8990/', //TODO: put url;
-        baseUrl: 'http://back.cabin.com:8000/',
+        baseUrl: 'http://39.97.104.62/api', //TODO: put url;
+        // baseUrl: 'http://back.cabin.com:8000/',
         connectTimeout: 5000,
         receiveTimeout: 3000,
         extra: {'withCredentials': true, 'credentials': true});

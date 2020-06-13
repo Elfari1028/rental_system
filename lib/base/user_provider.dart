@@ -13,7 +13,7 @@ class UserProvider extends IOClient {
     bool result = true;
     try {
       response = await communicateWith(
-          target: "account/get/", actionName: "Get My Info", method: "GET");
+          target: "/account/get/", actionName: "Get My Info", method: "GET");
     } on BackError catch (e) {
       if (e.code == "ACCOUNT_NOT_LOGGEDIN") {
         result = false;
@@ -39,7 +39,7 @@ class UserProvider extends IOClient {
     map["password"] = password;
     Map response = await communicateWith(
         param: map,
-        target: "account/login/",
+        target: "/account/login/",
         actionName: "Login",
         method: "POST");
 
@@ -53,7 +53,7 @@ class UserProvider extends IOClient {
   Future<dynamic> register(User user) async {
     Map response = await communicateWith(
         param: user.toMap(),
-        target: "account/register/",
+        target: "/account/register/",
         actionName: "register",
         method: "POST");
   }
@@ -62,7 +62,7 @@ class UserProvider extends IOClient {
     Map response;
     try{
      response = await communicateWith(
-        method: "GET", actionName: "Get All Users", target: "account/getall/");
+        method: "GET", actionName: "Get All Users", target: "/account/getall/");
     }on FrontError catch(e){
       BotToast.showSimpleNotification(title: "失败",subTitle: e.msg);
       print(e.msg);
@@ -82,7 +82,7 @@ class UserProvider extends IOClient {
           method: "POST",
           actionName: "UPDATE USER",
           param: user.toMap(),
-          target: 'account/update/');
+          target: '/account/update/');
     } on CabinError catch (e) {
       BotToast.showSimpleNotification(title: "更新失败", subTitle: e.msg);
       return false;

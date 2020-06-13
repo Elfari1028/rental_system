@@ -29,7 +29,7 @@ class HouseProvider extends IOClient {
 
   Future<List<House>> getRecommendations(int count) async {
     Map response = await communicateWith(
-      target: "house/recommend/",
+      target: "/house/recommend/",
       param: {"count": count},
       method: "POST",
       actionName: "Get REC",
@@ -39,7 +39,7 @@ class HouseProvider extends IOClient {
 
   Future<List<House>> getAllHouses() async {
     Map response = await communicateWith(
-      target: "house/getall/",
+      target: "/house/getall/",
       method: "GET",
       actionName: "Get ALL",
     );
@@ -47,7 +47,7 @@ class HouseProvider extends IOClient {
   }
     Future<List<House>> getAvailables() async {
     Map response = await communicateWith(
-      target: "house/available/",
+      target: "/house/available/",
       method: "GET",
       actionName: "Get ALL",
     );
@@ -56,7 +56,7 @@ class HouseProvider extends IOClient {
 
   Future<List<House>> search(String keyword) async {
     Map response = await communicateWith(
-      target: "house/search/",
+      target: "/house/search/",
       method: "POST",
       param: {"keyword": keyword},
       actionName: "Get ALL",
@@ -71,7 +71,7 @@ class HouseProvider extends IOClient {
       pgid = await PictureGroupProvider.instance.upload(pictures);
       house.pictureGroupID = pgid;
       response = await communicateWith(
-        target: "house/create/",
+        target: "/house/create/",
         method: "POST",
         actionName: "create",
         param: house.toMap(),
@@ -85,7 +85,7 @@ class HouseProvider extends IOClient {
   Future update(House house, List<Picture> appends) async {
     try {
       await communicateWith(
-        target: "house/update/",
+        target: "/house/update/",
         method: "POST",
         actionName: "create",
         param: house.toMap(),
