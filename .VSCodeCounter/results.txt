@@ -1,75 +1,124 @@
-Date : 2020-06-13 21:06:09
-Directory : d:\Projects\rental_system\lib
-Total : 44 files,  5708 codes, 67 comments, 422 blanks, all 6197 lines
+Date : 2020-06-14 17:36:04
+Directory : d:\Projects\rental_system
+Total : 62 files,  6445 codes, 151 comments, 470 blanks, all 7066 lines
 
 Languages
-+----------+------------+------------+------------+------------+------------+
-| language | files      | code       | comment    | blank      | total      |
-+----------+------------+------------+------------+------------+------------+
-| Dart     |         44 |      5,708 |         67 |        422 |      6,197 |
-+----------+------------+------------+------------+------------+------------+
++-------------+------------+------------+------------+------------+------------+
+| language    | files      | code       | comment    | blank      | total      |
++-------------+------------+------------+------------+------------+------------+
+| Dart        |         45 |      5,784 |         92 |        429 |      6,305 |
+| JavaScript  |          1 |        321 |          2 |          1 |        324 |
+| JSON        |          3 |        168 |          0 |          3 |        171 |
+| XML         |          2 |         61 |          2 |          2 |         65 |
+| YAML        |          1 |         30 |         51 |         12 |         93 |
+| Django HTML |          1 |         30 |          0 |          4 |         34 |
+| Java        |          1 |         23 |          3 |          4 |         30 |
+| Markdown    |          2 |         13 |          0 |          9 |         22 |
+| Swift       |          1 |         12 |          0 |          2 |         14 |
+| Properties  |          4 |          2 |          1 |          3 |          6 |
+| C++         |          1 |          1 |          0 |          1 |          2 |
++-------------+------------+------------+------------+------------+------------+
 
 Directories
-+-------------------------------------------------------------------------+------------+------------+------------+------------+------------+
-| path                                                                    | files      | code       | comment    | blank      | total      |
-+-------------------------------------------------------------------------+------------+------------+------------+------------+------------+
-| .                                                                       |         44 |      5,708 |         67 |        422 |      6,197 |
-| base                                                                    |         13 |      1,627 |         43 |        154 |      1,824 |
-| pages                                                                   |         15 |      1,724 |         10 |        119 |      1,853 |
-| pages\admin                                                             |          4 |        176 |          0 |         24 |        200 |
-| pages\maintenance                                                       |          1 |         43 |          0 |          7 |         50 |
-| pages\rentee                                                            |          2 |         85 |          0 |         12 |         97 |
-| widget                                                                  |         15 |      2,220 |         12 |        144 |      2,376 |
-| widget\editor                                                           |          7 |        962 |          7 |         62 |      1,031 |
-+-------------------------------------------------------------------------+------------+------------+------------+------------+------------+
++-------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                  | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                     |         62 |      6,445 |        151 |        470 |      7,066 |
+| android                                                                                               |          5 |         25 |          4 |          7 |         36 |
+| android\.gradle                                                                                       |          3 |          1 |          1 |          3 |          5 |
+| android\.gradle\6.3                                                                                   |          1 |          0 |          0 |          1 |          1 |
+| android\.gradle\buildOutputCleanup                                                                    |          1 |          1 |          1 |          1 |          3 |
+| android\.gradle\vcs-1                                                                                 |          1 |          0 |          0 |          1 |          1 |
+| android\app                                                                                           |          1 |         23 |          3 |          4 |         30 |
+| android\app\src                                                                                       |          1 |         23 |          3 |          4 |         30 |
+| android\app\src\main                                                                                  |          1 |         23 |          3 |          4 |         30 |
+| android\app\src\main\java                                                                             |          1 |         23 |          3 |          4 |         30 |
+| android\app\src\main\java\io                                                                          |          1 |         23 |          3 |          4 |         30 |
+| android\app\src\main\java\io\flutter                                                                  |          1 |         23 |          3 |          4 |         30 |
+| android\app\src\main\java\io\flutter\plugins                                                          |          1 |         23 |          3 |          4 |         30 |
+| ios                                                                                                   |          7 |        222 |          2 |          9 |        233 |
+| ios\Runner                                                                                            |          7 |        222 |          2 |          9 |        233 |
+| ios\Runner\Assets.xcassets                                                                            |          3 |        148 |          0 |          4 |        152 |
+| ios\Runner\Assets.xcassets\AppIcon.appiconset                                                         |          1 |        122 |          0 |          1 |        123 |
+| ios\Runner\Assets.xcassets\LaunchImage.imageset                                                       |          2 |         26 |          0 |          3 |         29 |
+| ios\Runner\Base.lproj                                                                                 |          2 |         61 |          2 |          2 |         65 |
+| lib                                                                                                   |         44 |      5,784 |         68 |        422 |      6,274 |
+| lib\base                                                                                              |         13 |      1,631 |         44 |        153 |      1,828 |
+| lib\pages                                                                                             |         15 |      1,784 |         10 |        120 |      1,914 |
+| lib\pages\admin                                                                                       |          4 |        176 |          0 |         24 |        200 |
+| lib\pages\maintenance                                                                                 |          1 |         43 |          0 |          7 |         50 |
+| lib\pages\rentee                                                                                      |          2 |         85 |          0 |         12 |         97 |
+| lib\widget                                                                                            |         15 |      2,232 |         12 |        144 |      2,388 |
+| lib\widget\editor                                                                                     |          7 |        966 |          7 |         62 |      1,035 |
+| test                                                                                                  |          2 |        321 |         26 |          8 |        355 |
+| web                                                                                                   |          2 |         53 |          0 |          5 |         58 |
++-------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
 
 Files
-+-------------------------------------------------------------------------+----------+------------+------------+------------+------------+
-| filename                                                                | language | code       | comment    | blank      | total      |
-+-------------------------------------------------------------------------+----------+------------+------------+------------+------------+
-| d:\Projects\rental_system\lib\base\cabin_model.dart                     | Dart     |         18 |          0 |          3 |         21 |
-| d:\Projects\rental_system\lib\base\error.dart                           | Dart     |         56 |          1 |          4 |         61 |
-| d:\Projects\rental_system\lib\base\house.dart                           | Dart     |        242 |          0 |         25 |        267 |
-| d:\Projects\rental_system\lib\base\house_provider.dart                  | Dart     |        136 |          2 |         12 |        150 |
-| d:\Projects\rental_system\lib\base\ioclient.dart                        | Dart     |         85 |          7 |          7 |         99 |
-| d:\Projects\rental_system\lib\base\order.dart                           | Dart     |        213 |          0 |         14 |        227 |
-| d:\Projects\rental_system\lib\base\order_provider.dart                  | Dart     |         63 |          0 |          6 |         69 |
-| d:\Projects\rental_system\lib\base\picture.dart                         | Dart     |         94 |         23 |          9 |        126 |
-| d:\Projects\rental_system\lib\base\support_request.dart                 | Dart     |        256 |         10 |         27 |        293 |
-| d:\Projects\rental_system\lib\base\support_request_provider.dart        | Dart     |        139 |          0 |          9 |        148 |
-| d:\Projects\rental_system\lib\base\tasker.dart                          | Dart     |         19 |          0 |          5 |         24 |
-| d:\Projects\rental_system\lib\base\user.dart                            | Dart     |        222 |          0 |         24 |        246 |
-| d:\Projects\rental_system\lib\base\user_provider.dart                   | Dart     |         84 |          0 |          9 |         93 |
-| d:\Projects\rental_system\lib\main.dart                                 | Dart     |        137 |          2 |          5 |        144 |
-| d:\Projects\rental_system\lib\pages\admin\house_list.dart               | Dart     |         46 |          0 |          6 |         52 |
-| d:\Projects\rental_system\lib\pages\admin\order_list.dart               | Dart     |         41 |          0 |          6 |         47 |
-| d:\Projects\rental_system\lib\pages\admin\request_list.dart             | Dart     |         42 |          0 |          6 |         48 |
-| d:\Projects\rental_system\lib\pages\admin\user_list.dart                | Dart     |         47 |          0 |          6 |         53 |
-| d:\Projects\rental_system\lib\pages\explore_page.dart                   | Dart     |         85 |          0 |          5 |         90 |
-| d:\Projects\rental_system\lib\pages\home_page.dart                      | Dart     |        118 |          2 |         12 |        132 |
-| d:\Projects\rental_system\lib\pages\house_page.dart                     | Dart     |        327 |          5 |         12 |        344 |
-| d:\Projects\rental_system\lib\pages\login_page.dart                     | Dart     |        116 |          1 |          6 |        123 |
-| d:\Projects\rental_system\lib\pages\maintenance\request_list.dart       | Dart     |         43 |          0 |          7 |         50 |
-| d:\Projects\rental_system\lib\pages\personal_center_page.dart           | Dart     |        177 |          0 |         11 |        188 |
-| d:\Projects\rental_system\lib\pages\register_page.dart                  | Dart     |        300 |          1 |          8 |        309 |
-| d:\Projects\rental_system\lib\pages\rentee\order_list.dart              | Dart     |         42 |          0 |          6 |         48 |
-| d:\Projects\rental_system\lib\pages\rentee\request_list.dart            | Dart     |         43 |          0 |          6 |         49 |
-| d:\Projects\rental_system\lib\pages\splash_page.dart                    | Dart     |         40 |          0 |          9 |         49 |
-| d:\Projects\rental_system\lib\pages\support_page.dart                   | Dart     |        257 |          1 |         13 |        271 |
-| d:\Projects\rental_system\lib\widget\adaptive.dart                      | Dart     |         82 |          0 |         10 |         92 |
-| d:\Projects\rental_system\lib\widget\cabin_card.dart                    | Dart     |         69 |          0 |          3 |         72 |
-| d:\Projects\rental_system\lib\widget\cabin_data_table.dart              | Dart     |        599 |          0 |         30 |        629 |
-| d:\Projects\rental_system\lib\widget\cabin_nav_bar.dart                 | Dart     |        150 |          4 |         17 |        171 |
-| d:\Projects\rental_system\lib\widget\cabin_scaffold.dart                | Dart     |         85 |          0 |          4 |         89 |
-| d:\Projects\rental_system\lib\widget\cabin_search_bar.dart              | Dart     |        119 |          0 |          8 |        127 |
-| d:\Projects\rental_system\lib\widget\display_util.dart                  | Dart     |         62 |          0 |          2 |         64 |
-| d:\Projects\rental_system\lib\widget\editor\avatar_field.dart           | Dart     |         42 |          0 |          7 |         49 |
-| d:\Projects\rental_system\lib\widget\editor\custom_radio.dart           | Dart     |        215 |          3 |         16 |        234 |
-| d:\Projects\rental_system\lib\widget\editor\house_editor.dart           | Dart     |        193 |          0 |          9 |        202 |
-| d:\Projects\rental_system\lib\widget\editor\input_field.dart            | Dart     |         76 |          4 |          6 |         86 |
-| d:\Projects\rental_system\lib\widget\editor\photo_uploader.dart         | Dart     |         63 |          0 |          5 |         68 |
-| d:\Projects\rental_system\lib\widget\editor\support_request_editor.dart | Dart     |        174 |          0 |         11 |        185 |
-| d:\Projects\rental_system\lib\widget\editor\user_editor.dart            | Dart     |        199 |          0 |          8 |        207 |
-| d:\Projects\rental_system\lib\widget\house_card.dart                    | Dart     |         92 |          1 |          8 |        101 |
-| Total                                                                   |          |      5,708 |         67 |        422 |      6,197 |
-+-------------------------------------------------------------------------+----------+------------+------------+------------+------------+
++-------------------------------------------------------------------------------------------------------+-------------+------------+------------+------------+------------+
+| filename                                                                                              | language    | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------+-------------+------------+------------+------------+------------+
+| d:\Projects\rental_system\README.md                                                                   | Markdown    |         10 |          0 |          7 |         17 |
+| d:\Projects\rental_system\android\.gradle\6.3\gc.properties                                           | Properties  |          0 |          0 |          1 |          1 |
+| d:\Projects\rental_system\android\.gradle\buildOutputCleanup\cache.properties                         | Properties  |          1 |          1 |          1 |          3 |
+| d:\Projects\rental_system\android\.gradle\vcs-1\gc.properties                                         | Properties  |          0 |          0 |          1 |          1 |
+| d:\Projects\rental_system\android\app\src\main\java\io\flutter\plugins\GeneratedPluginRegistrant.java | Java        |         23 |          3 |          4 |         30 |
+| d:\Projects\rental_system\android\local.properties                                                    | Properties  |          1 |          0 |          0 |          1 |
+| d:\Projects\rental_system\ios\Runner\AppDelegate.swift                                                | Swift       |         12 |          0 |          2 |         14 |
+| d:\Projects\rental_system\ios\Runner\Assets.xcassets\AppIcon.appiconset\Contents.json                 | JSON        |        122 |          0 |          1 |        123 |
+| d:\Projects\rental_system\ios\Runner\Assets.xcassets\LaunchImage.imageset\Contents.json               | JSON        |         23 |          0 |          1 |         24 |
+| d:\Projects\rental_system\ios\Runner\Assets.xcassets\LaunchImage.imageset\README.md                   | Markdown    |          3 |          0 |          2 |          5 |
+| d:\Projects\rental_system\ios\Runner\Base.lproj\LaunchScreen.storyboard                               | XML         |         36 |          1 |          1 |         38 |
+| d:\Projects\rental_system\ios\Runner\Base.lproj\Main.storyboard                                       | XML         |         25 |          1 |          1 |         27 |
+| d:\Projects\rental_system\ios\Runner\Runner-Bridging-Header.h                                         | C++         |          1 |          0 |          1 |          2 |
+| d:\Projects\rental_system\lib\base\cabin_model.dart                                                   | Dart        |         18 |          0 |          3 |         21 |
+| d:\Projects\rental_system\lib\base\error.dart                                                         | Dart        |         56 |          1 |          4 |         61 |
+| d:\Projects\rental_system\lib\base\house.dart                                                         | Dart        |        242 |          0 |         25 |        267 |
+| d:\Projects\rental_system\lib\base\house_provider.dart                                                | Dart        |        138 |          2 |         12 |        152 |
+| d:\Projects\rental_system\lib\base\ioclient.dart                                                      | Dart        |         85 |          8 |          6 |         99 |
+| d:\Projects\rental_system\lib\base\order.dart                                                         | Dart        |        213 |          0 |         14 |        227 |
+| d:\Projects\rental_system\lib\base\order_provider.dart                                                | Dart        |         63 |          0 |          6 |         69 |
+| d:\Projects\rental_system\lib\base\picture.dart                                                       | Dart        |         94 |         23 |          9 |        126 |
+| d:\Projects\rental_system\lib\base\support_request.dart                                               | Dart        |        256 |         10 |         27 |        293 |
+| d:\Projects\rental_system\lib\base\support_request_provider.dart                                      | Dart        |        141 |          0 |          9 |        150 |
+| d:\Projects\rental_system\lib\base\tasker.dart                                                        | Dart        |         19 |          0 |          5 |         24 |
+| d:\Projects\rental_system\lib\base\user.dart                                                          | Dart        |        222 |          0 |         24 |        246 |
+| d:\Projects\rental_system\lib\base\user_provider.dart                                                 | Dart        |         84 |          0 |          9 |         93 |
+| d:\Projects\rental_system\lib\main.dart                                                               | Dart        |        137 |          2 |          5 |        144 |
+| d:\Projects\rental_system\lib\pages\admin\house_list.dart                                             | Dart        |         46 |          0 |          6 |         52 |
+| d:\Projects\rental_system\lib\pages\admin\order_list.dart                                             | Dart        |         41 |          0 |          6 |         47 |
+| d:\Projects\rental_system\lib\pages\admin\request_list.dart                                           | Dart        |         42 |          0 |          6 |         48 |
+| d:\Projects\rental_system\lib\pages\admin\user_list.dart                                              | Dart        |         47 |          0 |          6 |         53 |
+| d:\Projects\rental_system\lib\pages\explore_page.dart                                                 | Dart        |         85 |          0 |          5 |         90 |
+| d:\Projects\rental_system\lib\pages\home_page.dart                                                    | Dart        |        118 |          2 |         12 |        132 |
+| d:\Projects\rental_system\lib\pages\house_page.dart                                                   | Dart        |        327 |          5 |         12 |        344 |
+| d:\Projects\rental_system\lib\pages\login_page.dart                                                   | Dart        |        116 |          1 |          6 |        123 |
+| d:\Projects\rental_system\lib\pages\maintenance\request_list.dart                                     | Dart        |         43 |          0 |          7 |         50 |
+| d:\Projects\rental_system\lib\pages\personal_center_page.dart                                         | Dart        |        177 |          0 |         11 |        188 |
+| d:\Projects\rental_system\lib\pages\register_page.dart                                                | Dart        |        306 |          1 |          8 |        315 |
+| d:\Projects\rental_system\lib\pages\rentee\order_list.dart                                            | Dart        |         42 |          0 |          6 |         48 |
+| d:\Projects\rental_system\lib\pages\rentee\request_list.dart                                          | Dart        |         43 |          0 |          6 |         49 |
+| d:\Projects\rental_system\lib\pages\splash_page.dart                                                  | Dart        |         40 |          0 |          9 |         49 |
+| d:\Projects\rental_system\lib\pages\support_page.dart                                                 | Dart        |        311 |          1 |         14 |        326 |
+| d:\Projects\rental_system\lib\widget\adaptive.dart                                                    | Dart        |         82 |          0 |         10 |         92 |
+| d:\Projects\rental_system\lib\widget\cabin_card.dart                                                  | Dart        |         69 |          0 |          3 |         72 |
+| d:\Projects\rental_system\lib\widget\cabin_data_table.dart                                            | Dart        |        607 |          0 |         30 |        637 |
+| d:\Projects\rental_system\lib\widget\cabin_nav_bar.dart                                               | Dart        |        150 |          4 |         17 |        171 |
+| d:\Projects\rental_system\lib\widget\cabin_scaffold.dart                                              | Dart        |         85 |          0 |          4 |         89 |
+| d:\Projects\rental_system\lib\widget\cabin_search_bar.dart                                            | Dart        |        119 |          0 |          8 |        127 |
+| d:\Projects\rental_system\lib\widget\display_util.dart                                                | Dart        |         62 |          0 |          2 |         64 |
+| d:\Projects\rental_system\lib\widget\editor\avatar_field.dart                                         | Dart        |         42 |          0 |          7 |         49 |
+| d:\Projects\rental_system\lib\widget\editor\custom_radio.dart                                         | Dart        |        215 |          3 |         16 |        234 |
+| d:\Projects\rental_system\lib\widget\editor\house_editor.dart                                         | Dart        |        196 |          0 |          9 |        205 |
+| d:\Projects\rental_system\lib\widget\editor\input_field.dart                                          | Dart        |         76 |          4 |          6 |         86 |
+| d:\Projects\rental_system\lib\widget\editor\photo_uploader.dart                                       | Dart        |         63 |          0 |          5 |         68 |
+| d:\Projects\rental_system\lib\widget\editor\support_request_editor.dart                               | Dart        |        175 |          0 |         11 |        186 |
+| d:\Projects\rental_system\lib\widget\editor\user_editor.dart                                          | Dart        |        199 |          0 |          8 |        207 |
+| d:\Projects\rental_system\lib\widget\house_card.dart                                                  | Dart        |         92 |          1 |          8 |        101 |
+| d:\Projects\rental_system\pubspec.yaml                                                                | YAML        |         30 |         51 |         12 |         93 |
+| d:\Projects\rental_system\test\test.js                                                                | JavaScript  |        321 |          2 |          1 |        324 |
+| d:\Projects\rental_system\test\widget_test.dart                                                       | Dart        |          0 |         24 |          7 |         31 |
+| d:\Projects\rental_system\web\index.html                                                              | Django HTML |         30 |          0 |          4 |         34 |
+| d:\Projects\rental_system\web\manifest.json                                                           | JSON        |         23 |          0 |          1 |         24 |
+| Total                                                                                                 |             |      6,445 |        151 |        470 |      7,066 |
++-------------------------------------------------------------------------------------------------------+-------------+------------+------------+------------+------------+

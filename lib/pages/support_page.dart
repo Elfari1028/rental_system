@@ -36,7 +36,7 @@ class SupportConvoPageState extends State<SupportConvoPage> {
       body: requestDetail(),
       side: Column(children: [
         conversation(),
-        if (widget.request.status.value < 3) replyField()
+        if (widget.request.status.value < 4) replyField()
       ]),
       bodyRatio: 5,
     );
