@@ -9,6 +9,7 @@ import 'package:cabin/widget/editor/photo_uploader.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class SupportConvoPage extends StatefulWidget {
   SupportRequest request;
@@ -33,7 +34,10 @@ class SupportConvoPageState extends State<SupportConvoPage> {
     return CabinScaffold(
       navBar: CabinNavBar(),
       body: requestDetail(),
-      side: Column(children:[conversation(),if(widget.request.status.value<3)replyField()]),
+      side: Column(children: [
+        conversation(),
+        if (widget.request.status.value < 3) replyField()
+      ]),
       bodyRatio: 5,
     );
   }
@@ -65,7 +69,9 @@ class SupportConvoPageState extends State<SupportConvoPage> {
                         children: [
                           BackButton(),
                           Text("工单详情"),
-                          Container(width: 50,)
+                          Container(
+                            width: 50,
+                          )
                         ]),
                     CarouselSlider(
                         items: imageCards(),
@@ -104,14 +110,62 @@ class SupportConvoPageState extends State<SupportConvoPage> {
                         title: Text("订单编号"),
                         subtitle: Text(widget.request.order.id.toString())),
                     Divider(thickness: 1),
-                    if (widget.request.status != RequestStatus.closed ||
+                    if (widget.request.status != RequestStatus.closed &&
                         widget.request.status != RequestStatus.rated)
-                      RaisedButton(onPressed: () {}, child: Text("关闭工单")),
-                    if (widget.request.status == RequestStatus.closed)
-                      RaisedButton(onPressed: () {}, child: Text("评分")),
+                      RaisedButton(
+                          onPressed: () async {
+                            await SupportRequestProvider.instance
+                                .close(widget.request);
+                            setState(() {});
+                            refreshConvo();
+                          },
+                          child: Text("关闭工单")),
+                    if (widget.request.status == RequestStatus.closed &&
+                        UserProvider.currentUser.type == UserType.rentee)
+                      RaisedButton(
+                          onPressed: () async {
+                             await showDialog<bool>(
+        context: context,
+        builder: (context) {
+          double rating = 5;
+          String str = "";
+          return SimpleDialog(title: Text("服务评分"), children: [
+            SingleChildScrollView(
+                padding: EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    SmoothStarRating(
+                        starCount: 5,
+                        rating: rating,
+                        isReadOnly: false,
+                        allowHalfRating: false),
+                    TextField(
+                        onChanged: (value) {
+                          str = value;
+                        },
+                        decoration: InputDecoration(hintText: "在这里输入评价")),
+                    RaisedButton(
+                        onPressed: () async {
+                          bool result = await SupportRequestProvider.instance.rate(
+                              Ratings.fromMap({
+                            'srid': widget.request.id,
+                            'stars': rating.round(),
+                            'content': str
+                          }));
+                          if(result == true)widget.request.status = RequestStatus.rated;
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("OK"))
+                  ],
+                ))
+          ]);
+        });
+                            refreshConvo();
+                          },
+                          child: Text("评分")),
                   ]))));
- 
-  Widget replyField(){
+
+  Widget replyField() {
     List<Widget> childrens = new List<Widget>();
     childrens.add(TextField(
       maxLines: null,
@@ -137,12 +191,13 @@ class SupportConvoPageState extends State<SupportConvoPage> {
         width: 600,
         padding: EdgeInsets.all(20),
         child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: childrens),
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: childrens),
       ),
     );
   }
+
   Widget conversation() {
     if (!convoReady)
       return Container(

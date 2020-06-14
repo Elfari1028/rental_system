@@ -52,8 +52,6 @@ class CabinNavBarState extends State<CabinNavBar> {
                                 alignment: Alignment.center,
                                 child: Container(height:50,child:FlatButton(
                                     onPressed: () {
-                                      Navigator.of(context)
-                                          .popUntil(ModalRoute.withName('/home'));
                                     },
                                     padding: EdgeInsets.all(5),
                                     child: Image.asset("images/title.png",fit: BoxFit.cover,)))),
@@ -94,8 +92,10 @@ class CabinNavBarState extends State<CabinNavBar> {
                   borderRadius: BorderRadius.circular(20)),
               onPressed: ()async {
                 String name =ModalRoute.of(context).settings.name;
-                if(name!="/center" || (name!="/home")||(name =="/home" && UserProvider.currentUser.type == UserType.rentee))
-                  await Navigator.pushReplacementNamed(context, "/center");
+                if((name !="/center"&&name !="/home") || (name == '/home' && (UserProvider.currentUser.type == UserType.rentee))){
+                   await Navigator.pushNamed(context, "/center");
+                }
+                else await Navigator.pushReplacementNamed(context, "/center");
                 tasker.start();
               },
               child: ClipRRect(

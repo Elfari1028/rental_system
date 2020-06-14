@@ -169,7 +169,8 @@ class HouseEditorState extends State<HouseEditor> {
         return;
       }
     });
-    if (isSubmitting == false) {
+    if (isSubmitting == false || picController.pics.length == 0 ) {
+      isSubmitting = false;
       setState(() {});
       return;
     }
@@ -186,13 +187,15 @@ class HouseEditorState extends State<HouseEditor> {
       tmp = await HouseProvider.instance
           .create(house, picController.getPendedPictures());
     else
-      await HouseProvider.instance
+      result = await HouseProvider.instance
           .update(house, picController.getPendedPictures());
     if (result == true) {
       Toaster.showToast(title: "修改成功");
+      Navigator.of(context).pop();
     } else if (tmp != null) {
       house = tmp;
       Toaster.showToast(title: "创建成功");
+      Navigator.of(context).pop();
     }
     isSubmitting = false;
     setState(() {});

@@ -29,7 +29,7 @@ class AdminSupportRequestListPageState extends State<AdminSupportRequestListPage
           ?allorders.length == 0?Container(padding:EdgeInsets.only(top:100), alignment: Alignment.center, child:Text("暂无工单",style: TextStyle(fontSize: 50,fontWeight: FontWeight.bold))) :Container(
               alignment: Alignment.topCenter,
               padding: EdgeInsets.only(top: 60),
-              child: CabinDataTable(items: allorders,userType: UserType.service,refresh: ()async{await getList();setState(() {});}))
+              child: CabinDataTable(items: allorders,userType: UserType.service,refresh: (){getList();}))
           : Center(
               child: Container(
               width: 50,

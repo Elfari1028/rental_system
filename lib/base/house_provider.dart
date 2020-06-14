@@ -82,7 +82,7 @@ class HouseProvider extends IOClient {
     return House.fromMap(response["data"]);
   }
 
-  Future update(House house, List<Picture> appends) async {
+  Future<bool> update(House house, List<Picture> appends) async {
     try {
       await communicateWith(
         target: "/house/update/",
@@ -91,8 +91,10 @@ class HouseProvider extends IOClient {
         param: house.toMap(),
       );
     } on CabinError catch (e) {
-      Toaster.showToast(title: "创建失败", subTitle: e.toString());
+      Toaster.showToast(title: "修改失败", subTitle: e.toString());
+      return false;
     }
+    return true;
   }
 
   static List<House> getDemoRecomSync() {

@@ -49,11 +49,18 @@ class RenteeCabinDataTableState extends CabinDataTableState {
               context: context,
               builder: (ctx) {
                 return SimpleDialog(title: Text("更改状态"), children: [
-                  SimpleDialogOption(child: Text("取消订单"), onPressed: (){
-                    Navigator.of(context).pop(OrderStatus.canceled);
-                  },), SimpleDialogOption(child: Text("返回"), onPressed: (){
-                    Navigator.of(context).pop(null);
-                  },)
+                  SimpleDialogOption(
+                    child: Text("取消订单"),
+                    onPressed: () {
+                      Navigator.of(context).pop(OrderStatus.canceled);
+                    },
+                  ),
+                  SimpleDialogOption(
+                    child: Text("返回"),
+                    onPressed: () {
+                      Navigator.of(context).pop(null);
+                    },
+                  )
                 ]);
               });
           if (newstatus == null) return;
@@ -555,47 +562,48 @@ abstract class CabinDataTableState extends State<CabinDataTable> {
   }
 
   void rate(SupportRequest request) async {
-    Ratings result = await showDialog<Ratings>(
+    await showDialog<bool>(
         context: context,
         builder: (context) {
           double rating = 5;
           String str = "";
-          return AlertDialog(
-            title: Text("服务评分"),
-            content: Column(children: [
-              SmoothStarRating(
-                  starCount: 5,
-                  rating: rating,
-                  isReadOnly: false,
-                  allowHalfRating: false),
-              TextField(
-                  onChanged: (value) {
-                    str = value;
-                  },
-                  decoration: InputDecoration(hintText: "在这里输入评价"))
-            ]),
-            actions: [
-              FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(Ratings.fromMap({
-                      'srid': request.id,
-                      'stars': rating.round(),
-                      'content': str
-                    }));
-                  },
-                  child: Text("OK"))
-            ],
-          );
+          return SimpleDialog(title: Text("服务评分"), children: [
+            SingleChildScrollView(
+                padding: EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    SmoothStarRating(
+                        starCount: 5,
+                        rating: rating,
+                        isReadOnly: false,
+                        allowHalfRating: false),
+                    TextField(
+                        onChanged: (value) {
+                          str = value;
+                        },
+                        decoration: InputDecoration(hintText: "在这里输入评价")),
+                    RaisedButton(
+                        onPressed: () async {
+                          bool result = await SupportRequestProvider.instance.rate(
+                              Ratings.fromMap({
+                            'srid': request.id,
+                            'stars': rating.round(),
+                            'content': str
+                          }));
+                          if(result == true)request.status = RequestStatus.rated;
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("OK"))
+                  ],
+                ))
+          ]);
         });
-    if (result != null) {
-      await SupportRequestProvider.instance.rate(result);
-      setState(() {});
-      widget.refresh();
-    }
+    setState(() {});
+    widget.refresh();
   }
 
   void appoint(SupportRequest request) async {
-    await showDialog<Ratings>(
+    await showDialog(
         context: context,
         builder: (context) {
           String str = "";

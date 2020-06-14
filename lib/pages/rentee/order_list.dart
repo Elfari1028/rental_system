@@ -25,7 +25,7 @@ class RenteeOrderListPageState extends State<RenteeOrderListPage> {
       navBar: CabinNavBar(),
       adaptivePage: false,
       body: dataReady
-          ? Container(
+          ? allorders.length == 0?Container(padding:EdgeInsets.only(top:100), alignment: Alignment.center, child:Text("暂无",style: TextStyle(fontSize: 50,fontWeight: FontWeight.bold))) :Container(
               alignment: Alignment.topCenter,
               padding: EdgeInsets.only(top: 60),
               child: CabinDataTable(items: allorders,userType: UserType.rentee,refresh: ()async{await getList();setState(() {});}))

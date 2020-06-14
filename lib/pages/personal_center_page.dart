@@ -144,7 +144,7 @@ class PersonalCenterPageState extends State<PersonalCenterPage> {
         break;
       case UserType.maintenance:
         ret.add(actionCard("工单管理", Icons.feedback, ()async {
-        await Navigator.of(context).pushNamed('/request/maintenance');
+        await Navigator.of(context).pushNamed('/support/maintenance');
         setState(() {});
         }));
         break;

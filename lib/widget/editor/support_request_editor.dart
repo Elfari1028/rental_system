@@ -165,6 +165,7 @@ class SupportRequestEditorState extends State<SupportRequestEditor> {
     });
     if (isSubmitting == false ||
         picController.getPendedPictures().length == 0) {
+          isSubmitting = false;
       Toaster.showToast(title: "图片不得为空");
       setState(() {});
       return;

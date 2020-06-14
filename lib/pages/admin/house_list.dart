@@ -30,7 +30,7 @@ class AdminHouseListPageState extends State<AdminHouseListPage> {
           setState(() {});
         },),
         dataReady
-          ? Container(
+          ? allhouses.length == 0?Container(padding:EdgeInsets.only(top:100), alignment: Alignment.center, child:Text("暂无房源",style: TextStyle(fontSize: 50,fontWeight: FontWeight.bold))) :Container(
               alignment: Alignment.topCenter,
               padding: EdgeInsets.only(top: 60),
               child: CabinDataTable(items: allhouses,userType: UserType.service,refresh: ()async{await getList();setState(() {});}))

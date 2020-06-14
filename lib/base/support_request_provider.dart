@@ -101,7 +101,9 @@ class SupportRequestProvider extends IOClient {
       );
     }on CabinError catch(e){
       Toaster.showToast(title: "评价失败", subTitle: e.toString());
+      return false;
     }
+    return true;
   }
 
   Future<User> appointFixer(int id,SupportRequest request)async{
@@ -111,7 +113,7 @@ class SupportRequestProvider extends IOClient {
         actionName: 'appointFixer',
         method: 'POST',
         param: {'fid':id,'srid':request.id},
-        target: '/support/dispatch'
+        target: '/support/dispatch/'
       );
     }on CabinError catch(e){
       Toaster.showToast(title: "分配失败", subTitle: e.toString());
@@ -124,7 +126,7 @@ class SupportRequestProvider extends IOClient {
         actionName: 'appoint',
         method: 'POST',
         param: {'fid':id,'srid':srid},
-        target: '/support/pickup'
+        target: '/support/pickup/'
       );
     }on CabinError catch(e){
       Toaster.showToast(title: "分配失败", subTitle: e.toString());
@@ -136,7 +138,7 @@ class SupportRequestProvider extends IOClient {
         actionName: 'close',
         method: 'POST',
         param: {'srid':request.id},
-        target: '/support/close'
+        target: '/support/close/'
       );
     }on CabinError catch(e){
       Toaster.showToast(title: "分配失败", subTitle: e.toString());

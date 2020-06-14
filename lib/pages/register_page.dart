@@ -174,7 +174,7 @@ class RegisterPageState extends State<RegisterPage> {
                         onChanged: (value) {
                           if (value.length < 6 || value.length > 16) {
                             errorMap["passRepE"] = true;
-                            errorMap["passRep"] = "长度在6-16之间";
+                            errorMap["passRep"] = "长度在8-16之间";
                           } else if (value != pwCtrl.text) {
                             errorMap["passRepE"] = true;
                             errorMap["passRep"] = "密码与上次输入不同";
@@ -258,6 +258,12 @@ class RegisterPageState extends State<RegisterPage> {
   Future tryRegister(BuildContext context) async {
     // print("am i ever here");
     UserProvider provider = UserProvider.instance;
+    if(errorMap.containsValue(true)){
+      Toaster.showToast(leading:Icon(Icons.warning,color: Colors.red,), title: "请先检查错误！");
+      isRegistering = false;
+      setState(() {});
+      return ;
+    }
     bool result = true;
     try {
       User user = User(
